@@ -6,6 +6,8 @@
     <title>@ViewBag.Title - My ASP.NET Application</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/Content/fancyBox")
+    
     
 
 </head>
@@ -25,7 +27,7 @@
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li class="dropdown">
-                        <a href="@Url.Action("About", "Home")" class="dropdown-toggle" data-toggle="dropdown">About<span class="caret"></span></a>
+                        <a href="@Url.Action("Movies", "Index", "Movie")" class="dropdown-toggle" data-toggle="dropdown">About<span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="#">Your account</a></li>
                             <li><a href="#">Your details</a></li>
@@ -60,6 +62,7 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/knockout")
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/fancybox")
     @RenderSection("scripts", required: false)
 </body>
 </html>

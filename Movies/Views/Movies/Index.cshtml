@@ -1,0 +1,66 @@
+﻿@model IEnumerable<Movies.Models.Movie>
+
+@Styles.Render("~/Content/moviesIndex")
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Movies</h2>
+
+<table id="mainContent">
+        
+        @foreach (var item in Model)
+        {
+            <tr class="row rowHeight">
+                
+                <td class="col col-md-6">
+                    <table>
+                        <tr class="row">
+                            <td class="col col-md-12"><b>@Html.DisplayNameFor(Model => Model.Title) :</b>
+                            <td class="col col-md-12">@Html.DisplayFor(i => item.Title)</td>
+                        </tr>                       
+                        <tr class="row">
+                            <td class="col col-md-12"><b>@Html.DisplayNameFor(Model => Model.ReleaseDate) :</b></td>
+                        </tr>
+                        <tr class="row">
+                            <td class="col col-md-12">@Html.DisplayFor(i => item.ReleaseDate)</td>
+                        </tr>
+                        <tr class="row">
+                            <td class="col col-md-12"><b>@Html.DisplayNameFor(Model => Model.Score) :</b></td>
+                        </tr>
+                        <tr class="row">
+                            <td class="col col-md-12">@Html.DisplayFor(i => item.Score)</td>
+                        </tr>
+                        <tr class="row">
+                            <td class="col col-md-12"><b>@Html.DisplayNameFor(Model => Model.Trailer) :</b></td>
+                        </tr>
+                        <tr class="row">
+                            <td class="col col-md-12"><a class="videoPopUp fancybox.iframe" href="@string.Format("https://www.youtube.com/{0}?autoplay=1", item.Trailer)">Trailer</a></td>
+                            @*@string.Format("{0}", item.Trailer)*@
+                        </tr>
+                    </table>
+                </td>
+                <td class="col col-md-2"><img class="rowHeight" src="@Url.Action("GetImage", "Movies", new { id = item.MovieId })" /></td>               
+                
+                <td class="col col-md-4"><b>@Html.DisplayNameFor(Model => Model.Description) :</b> @Html.DisplayFor(i => item.Description)</td>
+        </tr>
+        }
+</table>
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            
+            $("a.videoPopUp").fancybox({
+                    maxWidth: 800,
+                    maxHeight: 600,
+                    fitToView: false,
+                    width: '70%',
+                    height: '70%',
+                    autoSize: false,
+                    closeClick: false,
+                    openEffect: 'none',
+                    closeEffect: 'none'
+                });
+        });
+    </script>
+}

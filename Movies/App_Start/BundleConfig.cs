@@ -29,6 +29,22 @@ namespace Movies
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+
+            //FancyBox
+            bundles.Add(new StyleBundle("~/Content/fancyBox").Include(
+                    "~/Content/jquery.fancybox.css",
+                    "~/Content/jquery.fancybox-thumbs.css",
+                    "~/Content/jquery.fancybox-buttons.css"));
+            bundles.Add(new ScriptBundle("~/bundles/fancybox").Include(
+                    "~/Scripts/jquery.fancybox.js",
+                    "~/Scripts/jquery.fancybox-media.js",
+                    "~/Scripts/jquery.fancybox-buttons.js",
+                    "~/Scripts/jquery.fancybox-thumbs.js",
+                    "~/Scripts/jquery.fancybox.pack.js"));
+
+            //Movies Css
+            bundles.Add(new StyleBundle("~/Content/moviesIndex").Include(
+                      "~/Content/moviesIndex.css"));
         }
     }
 }
