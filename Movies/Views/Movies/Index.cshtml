@@ -1,56 +1,93 @@
-﻿@model IEnumerable<Movies.Models.Movie>
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model IPagedList<Movies.Models.Movie>
 
 @Styles.Render("~/Content/moviesIndex")
 @{
     ViewBag.Title = "Index";
 }
+@*Search button and input box*@
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="middlePage">
+        <div class="row">
+                <div class="col-md-11"><input class="form-control" type="text" placeholder="Search" /></div>
+                <div class="col-md-1"><input type="submit" value="Search" class="btn btn-default" /></div>
+        </div>
+    </div>
+}
 
-<h2>Movies</h2>
+<h2 class="text-center">Movies</h2>
 
-<table id="mainContent">
-        
-        @foreach (var item in Model)
-        {
-            <tr class="row rowHeight">
-                
-                <td class="col col-md-6">
-                    <table>
-                        <tr class="row">
-                            <td class="col col-md-12"><b>@Html.DisplayNameFor(Model => Model.Title) :</b>
-                            <td class="col col-md-12">@Html.DisplayFor(i => item.Title)</td>
-                        </tr>                       
-                        <tr class="row">
-                            <td class="col col-md-12"><b>@Html.DisplayNameFor(Model => Model.ReleaseDate) :</b></td>
-                        </tr>
-                        <tr class="row">
-                            <td class="col col-md-12">@Html.DisplayFor(i => item.ReleaseDate)</td>
-                        </tr>
-                        <tr class="row">
-                            <td class="col col-md-12"><b>@Html.DisplayNameFor(Model => Model.Score) :</b></td>
-                        </tr>
-                        <tr class="row">
-                            <td class="col col-md-12">@Html.DisplayFor(i => item.Score)</td>
-                        </tr>
-                        <tr class="row">
-                            <td class="col col-md-12"><b>@Html.DisplayNameFor(Model => Model.Trailer) :</b></td>
-                        </tr>
-                        <tr class="row">
-                            <td class="col col-md-12"><a class="videoPopUp fancybox.iframe" href="@string.Format("https://www.youtube.com/{0}?autoplay=1", item.Trailer)">Trailer</a></td>
-                            @*@string.Format("{0}", item.Trailer)*@
-                        </tr>
-                    </table>
-                </td>
-                <td class="col col-md-2"><img class="rowHeight" src="@Url.Action("GetImage", "Movies", new { id = item.MovieId })" /></td>               
-                
-                <td class="col col-md-4"><b>@Html.DisplayNameFor(Model => Model.Description) :</b> @Html.DisplayFor(i => item.Description)</td>
-        </tr>
-        }
-</table>
-@section scripts {
-    <script>
-        $(document).ready(function () {
+@*The results section*@
+<section class="table" id="mainContent">
+
+    @foreach (var item in Model)
+    {
+        <div class="row rowHeight">
+            <div class="col-md-offset-2"></div>
+            <div class="col-md-3"><img class="img-responsive imageStyle" src="@Url.Action("GetImage", "Movies", new { id = item.MovieId })" /></div>
+            <div class="col-md-7">
+                <div class="row">
+                    <div class="col-md-12 margitTop-20"><b>@Html.DisplayNameFor(Model => Model.First().Title) :</b><p>@Html.DisplayFor(i => item.Title)</p></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12"><b>@Html.DisplayNameFor(Model => Model.First().Description) :</b><p>@Html.DisplayFor(i => item.Description)</p></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12"><b>@Html.DisplayNameFor(Model => Model.First().ReleaseDate) :</b><p>@Html.DisplayFor(i => item.ReleaseDate)</p></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12"><b>@Html.DisplayNameFor(Model => Model.First().Score) :</b><p>@Html.DisplayFor(i => item.Score)</p></div>
+                </div>
+            </div>
+        </div>
+        <div class="row"><div class="col-md-12 text-center"><a class="btn btn-primary videoPopUp fancybox.iframe" href="@string.Format("https://www.youtube.com/embed/{0}?autoplay=1", item.Trailer)">Watch Trailer</a></div>  </div>
+        <div class="row table-bordered margitTop-20"></div>
+    }
+</section>
+    @Html.PagedListPager(Model, page => Url.Action("Movies", "Index", new { page }))
+    @******************** Test using Knockout ******************@
+    @*<div data-bind="foreach: Movies">
+            <div class="row rowHeight">
+                <div class="col-md-offset-2"></div>
+                <div class="col-md-3"><img class="img-responsive imageStyle" data-bind="attr: {src: '@Url.Action("GetImage", "Movies")/'+ MovieId}" /></div>
+                <div class="col-md-7">
+                    <div class="row">
+                        <div class="col-md-12 margitTop-20"><b>Title: </b><p data-bind="text: Title"></p></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12"><b>Desciption: </b><p data-bind="text: Description"></p></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12"><b>Release Date: </b><p data-bind="text: ReleaseDate"></p></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12"><b>Score: </b><p data-bind="text: Score"></p></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row"><div class="col-md-12 text-center"><a class="videoPopUp fancybox.iframe" data-bind="attr: {href:'https://www.youtube.com/embed/'+Trailer+'?autoplay=1'}">Trailer</a></div>  </div>
+        </div>*@
+
+    @*****************************************************************@
+
+    @section scripts {
+        <script>
+            @*$(document).ready(function () {
+            function ViewModel(Movies) {
+                var self = this;
+
+                self.Movies = Movies;
+            };
+
+            var viewModel = new ViewModel(@Html.HtmlConvertToJson(Model));
+            ko.applyBindings(viewModel);
+        });*@
             
-            $("a.videoPopUp").fancybox({
+            $(document).ready(function () {
+                $(".videoPopUp").fancybox({
                     maxWidth: 800,
                     maxHeight: 600,
                     fitToView: false,
@@ -61,6 +98,6 @@
                     openEffect: 'none',
                     closeEffect: 'none'
                 });
-        });
-    </script>
-}
+            });
+        </script>
+    }

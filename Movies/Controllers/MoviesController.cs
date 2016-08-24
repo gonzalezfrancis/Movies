@@ -5,9 +5,13 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web;
+using Newtonsoft.Json;
 using System.Web.Mvc;
 using Movies.DAL;
 using Movies.Models;
+using PagedList;
+using PagedList.Mvc;
+using System.Web.Script.Serialization;
 
 namespace Movies.Controllers
 {
@@ -16,9 +20,10 @@ namespace Movies.Controllers
         private MovieContext db = new MovieContext();
 
         // GET: Movies
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
-            return View(db.Movies.ToList());
+            //If the page paramet is == null then use 1, second parameter is the page size
+            return View(db.Movies.ToList().ToPagedList(page ?? 1, 5));
         }
 
         //GET: Image from the databse
@@ -46,6 +51,12 @@ namespace Movies.Controllers
         // GET: Movies/Create
         public ActionResult Create()
         {
+            //Send the complete List of Actors and Genren into the view 
+            var workerGenre = new WorkeGenreViewModels
+            {
+                WorkersCheck = db.Workers.ToList(), GenreCheck = db.Genres.ToList()
+            };
+            ViewBag.WorkerGenre = workerGenre;
             return View();
         }
 
@@ -123,6 +134,41 @@ namespace Movies.Controllers
             return RedirectToAction("Index");
         }
 
+        public JsonResult getWorkersGenre()
+        {
+            var workerGenre = new WorkeGenreViewModels
+            {
+                WorkersCheck = db.Workers.ToList(),
+                GenreCheck = db.Genres.ToList()
+            };
+            //Choose to ignore the Looping reference Many to many while serialing the object into Json format
+            //Also specified with attribute [JsonIgnore] in the many to many tables
+            var json = JsonConvert.SerializeObject(workerGenre, Formatting.None,
+                        new JsonSerializerSettings()
+                        {
+                            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                        });
+            
+            //Add allowget for security 
+            return Json(json, JsonRequestBehavior.AllowGet);
+        }
+
+        //Create a new Actor
+        [HttpPost]
+        public void postWorker(Worker jsonObj)
+        {
+            //Store the new Actor in the db
+            db.Workers.Add(jsonObj);
+            db.SaveChanges();
+        }
+
+        //Create a new Genre
+        [HttpPost]
+        public void postGenre(Genre jsonObj)
+        {
+            db.Genres.Add(jsonObj);
+            db.SaveChanges();
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

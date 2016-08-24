@@ -24,10 +24,14 @@ namespace Movies
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
-                      "~/Scripts/respond.js"));
+                      "~/Scripts/respond.js",
+                      "~/Scripts/bootstrap-datepicker.js",
+                      "~/Scripts/jquery-customselect.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
+                      "~/Content/bootstrap-datepicker.css",
+                      "~/Content/jquery-customselect.css",
                       "~/Content/site.css"));
 
             //FancyBox
@@ -35,6 +39,7 @@ namespace Movies
                     "~/Content/jquery.fancybox.css",
                     "~/Content/jquery.fancybox-thumbs.css",
                     "~/Content/jquery.fancybox-buttons.css"));
+
             bundles.Add(new ScriptBundle("~/bundles/fancybox").Include(
                     "~/Scripts/jquery.fancybox.js",
                     "~/Scripts/jquery.fancybox-media.js",

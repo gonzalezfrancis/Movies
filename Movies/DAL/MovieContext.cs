@@ -16,7 +16,6 @@ namespace Movies.DAL
 
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Worker> Workers { get; set; }
-        public DbSet<Role> Roles { get; set; }
         public DbSet<Genre> Genres { get; set; }
 
         //public DbSet<MovieGenre> MovieGenres { get; set; }

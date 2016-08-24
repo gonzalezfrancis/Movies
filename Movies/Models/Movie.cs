@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 using System.Linq;
 using System.Web;
+using System.Web.Script.Serialization;
 
 namespace Movies.Models
 {
@@ -31,8 +33,11 @@ namespace Movies.Models
         public string Trailer { get; set; }
 
         //RelationShips
+
+        [JsonIgnore]
         public virtual ICollection<Worker> Workers { get; set; }
+        [JsonIgnore]
         public virtual ICollection<Genre> Genres { get; set; }
-        public virtual ICollection<Role> Roles { get; set; }
+        
     }
 }

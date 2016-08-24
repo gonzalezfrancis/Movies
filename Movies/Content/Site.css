@@ -15,10 +15,16 @@
 .dl-horizontal dt {
     white-space: normal;
 }
-
-/* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
+#currentgenreList{
+    list-style-type:none;
 }
+.marginTop-20{
+    margin-top:20px;
+}
+.marginTop-50{
+    margin-top:50px;
+}
+.marginTop-100{
+     margin-top:100px;
+}
+

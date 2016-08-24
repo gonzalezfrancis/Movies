@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Script.Serialization;
 
 namespace Movies.Models
 {
@@ -15,6 +17,7 @@ namespace Movies.Models
         public string GenreName { get; set; }
 
         //Relationship
+        [JsonIgnore]
         public virtual ICollection<Movie> Movies { get; set; }
 
     }

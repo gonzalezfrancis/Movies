@@ -1,14 +1,18 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+
 
 namespace Movies.Models
 {
     public class Worker
     {
+        
         public Worker()
         {
+            
             this.Movies = new HashSet<Movie>();
             
         }
@@ -17,7 +21,8 @@ namespace Movies.Models
         public string LastName { get; set; }
 
         //Relationship
+        [JsonIgnore]
         public virtual ICollection<Movie> Movies { get; set; }
-        public virtual ICollection<Role> Roles { get; set; }
+        
     }
 }

@@ -1,75 +1,336 @@
 ﻿@model Movies.Models.Movie
-
+@using Movies.Models;
 @{
     ViewBag.Title = "Create";
 }
 
-<h2>Create</h2>
+<h2 class="text-center">Create</h2>
+<div class="alertPlaceHolder"></div>
+<div class="row">
+    <div class="col-md-6">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
 
-@using (Html.BeginForm()) 
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Movie</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
-            </div>
-        </div>
+            <div class="form-horizontal">
+                <h4 class="text-center">Add Movie</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ReleaseDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ReleaseDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ReleaseDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Score, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Score, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Score, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Score, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Score, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Score, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ReleaseDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(model => model.ReleaseDate, new { @class = "datepicker" })
+                        @Html.ValidationMessageFor(model => model.ReleaseDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Cover, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Cover, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Cover, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Cover, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Cover, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Cover, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Trailer, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Trailer, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Trailer, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Trailer, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Trailer, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Trailer, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <div class="row marginTop-20">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-2"><b>Genres:</b></div>
+                    <ul id="currentgenreList" class="col-md-9"></ul>
+                </div>
+                <div class="row marginTop-20">
+                    @Html.LabelFor(model => model.Genres, htmlAttributes: new { @class = "control-label col-md-2" })                   
+                        <div class="col-md-8">
+                            <div id="genreListContainer" class="col-md-8">
+                                <select id="genreList" name="standard" class="custom-select">
+                                    <option value=''>Please Select Genres</option>
+
+                                </select>
+                            </div>
+                            <div class="col-md-4"><span onclick="addGenre()" class="btn btn-success">Add selected Genre</span></div>
+                            <div id="currentGenreList"></div>
+                            @Html.ValidationMessageFor(model => model.Genres, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="row marginTop-20">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-2"><b>Actors:</b></div>
+                    <ul id="currentWorkersList" class="col-md-9"></ul>
+                </div>
+
+                <div class="row marginTop-20">
+                    @Html.LabelFor(model => model.Workers, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-8">
+                        <div id="actorListContainer" class="col-md-8">
+                            <select id="actorList" name="standard" class="custom-select">
+                                <option value=''>Please Select Actors</option>
+
+                            </select>
+                        </div>
+                        <div class="col-md-4"><span onclick="addWorker()" class="btn btn-success">Add selected Actor</span></div>
+                        <div id="currentActorList"></div>
+                        @Html.ValidationMessageFor(model => model.Workers, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="marginTop-20">
+                    <div class="col-md-offset-5 ">
+                        <input type="submit" value="Create" class="btn btn-warning" />
+                    </div>
+                </div>
             </div>
-        </div>
+        }
     </div>
-}
-
+    <div class="col col-md-6">
+        <div class="row rowHeight">
+            <h4 class="text-center">Add Actor</h4>
+            <hr />
+            <div class="row marginTop-20">
+                <div class="col-md-2"></div>
+                <div class="col-md-2">First Name</div>
+                <div class="col-md-6"><input type="text" class="form-control" id="workerFnDb"/></div>
+            </div>
+            <div class="row marginTop-20">
+                <div class="col-md-2"></div>
+                <div class="col-md-2">Last Name</div>  
+                <div class="col-md-6"><input type="text" class="form-control" id="workerLnDb" /></div>
+                <div class="col-md-2" id="workerBdSuccess"></div>
+            </div>
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-8" id="workerValidation"></div>
+            </div>
+            <div class="row marginTop-20">
+                <div class="col-md-4"></div>
+                <div class="col-md-3"><span onclick="addWorkerDb()" class="btn btn-success">Add a new Actor in db</span></div>
+            </div>
+        </div>
+        <div class="row">
+            <h4 class="text-center marginTop-100">Add Genre</h4>
+            <hr/>
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-2">Genre</div>
+                <div class="col-md-6"><input type="text" class="form-control" id="genreNDb"/></div>
+            </div>
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-8" id="genreValidation"></div>
+            </div>
+            <div class="row marginTop-20">
+                <div class="col-md-4"></div>
+                <div class="col-md-3"><span onclick="addGenreDb()" class="btn btn-success">Add a new Genre in db</span></div>
+            </div>
+        </div>
+        
+    </div>
+</div>
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+@section scripts {
+<script>
+    $(document).ready(function () {
+        window.workerGenreList;
+        window.currentGenreListId = [];
+        $(".datepicker").datepicker();
+        $("#actorList").customselect();
+        $("#genreList").customselect();
+        //TODO:Chec for the trigger selctor
+        $(".dlBt").on("click", "span", function (event) {
+            alert("hola");
+        });
+        getWorkersList();
+
+    });
+    
+    //Bootstrap alert
+
+    bootstrap_alert = function (message) {
+        $(".alertPlaceHolder").html("<div class='alert alert-success alert-dismissible' role='alert'>" +
+                                    "<button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>"+
+                                    "&times;</span><span class='sr-only'>Close</span></button><strong>" + message + "</strong></div>");
+    }
+    //Add a new actor to the cureent movie
+    function addWorker() {
+
+
+    }
+    //Function to send and new worker(actor) to the database
+    function addWorkerDb() {
+        var newWorker = {};
+        //Flag to check if name is on the list
+        var flag = true;
+        newWorker.Name = $("#workerFnDb").val().trim();
+        newWorker.LastName = $("#workerLnDb").val().trim();
+        
+        //Check if the name already exist
+        for (var x = 0; x < window.workerGenreList.WorkersCheck.length; x++) {
+            
+            if (window.workerGenreList.WorkersCheck[x].Name.toLowerCase() == newWorker.Name.toLowerCase() &&
+                window.workerGenreList.WorkersCheck[x].LastName.toLowerCase() == newWorker.LastName.toLowerCase() ||
+                newWorker.Name == "" || newWorker.LastName == "") {
+                flag = false;
+            }
+        }
+        if(flag == true){
+            var workerUrl = '@Url.Action("postWorker", "Movies")';
+
+            $.post(workerUrl, newWorker, function () {
+                //Reset the inputboxes
+                $("#workerFnDb").val("");
+                $("#workerLnDb").val("");
+                $("#workerValidation").empty();
+                //Open the alert box
+                bootstrap_alert("The actor has been added successfully");
+                //update the Actors lists
+                getWorkersList();
+            });
+        }
+        else if (flag == false) {
+            $("#workerValidation").empty();
+            if (newWorker.Name == "" || newWorker.LastName == "") {
+                $("#workerValidation").append("<p style='color:red'>You have to input first name and last name</p>")
+            }
+            else {
+                $("#workerValidation").append("<p style='color:red'>This actor already exists</p>");
+            }
+        }
+    }
+    //Genre functions to add the genred to the movie
+    function addGenre() {
+        var element = $("#genreList").val();
+        var flag = false;
+        //check if a genre is selected
+        if (element != "") {
+            //Check if there is not a repeated value
+            for(var x = 0; x < window.currentGenreListId.length; x++){
+                if (element == window.currentGenreListId[x]) {
+                    flag = true;
+                }
+            }
+            if (flag == false) {
+                window.currentGenreListId.push(element);
+                $("#currentgenreList").empty();
+                for (var x = 0; x < window.currentGenreListId.length; x++) {
+                    //Create a list using the Id and getting the names
+                    $("#currentgenreList").append("<li class='marginTop-50'><span class='col-md-4'>" +
+                        window.workerGenreList.GenreCheck[window.currentGenreListId[x] - 1].GenreName + "</span>" + " " +
+                        "<span id='" + (window.currentGenreListId[x] - 1) + "' "+
+                        "class='dlBt btn btn-danger col-md-6'>Delete</span></li>");
+                }
+            }
+        }       
+    }
+    //Function to delete genre from the movie List
+    function delGenre() {
+        $("#currentgenreList").empty();
+        
+        
+        window.currentGenreListId.findIndex()
+        
+        window.currentGenreListId.splice(value,1);
+        for (var x = 0; x < window.currentGenreListId.length; x++) {
+            $("#currentgenreList").append("<li class='marginTop-50'><span class='col-md-4'>" +
+                        window.workerGenreList.GenreCheck[window.currentGenreListId[x] - 1].GenreName + "</span>" + " " +
+                        "<span id='" + (window.currentGenreListId[x] - 1) + "' "+
+                        "class='dlBt  btn btn-danger col-md-6'>Delete</span></li>");
+        }
+    }
+    function addGenreDb() {
+        var newGenre = {};
+        //Flag to check if genre already exist
+        var flag = true;
+        newGenre.GenreName = $("#genreNDb").val().trim();
+        for (var x = 0; x < window.workerGenreList.GenreCheck.length; x++) {
+            if(window.workerGenreList.GenreCheck[x].GenreName.toLowerCase() == newGenre.GenreName.toLowerCase() ||
+                newGenre.GenreName == "") {
+                
+                flag = false;
+            }
+        }
+        //Add to db if does not exist
+        if (flag == true) {
+            var genreUrl = '@Url.Action("postGenre", "Movies")';
+            $.post(genreUrl, newGenre, function () {
+                //Reset the inputboxes
+                $("#genreNDb").val("");
+                $("#genreValidation").empty();
+                //Open the alert box
+                bootstrap_alert("The new genre has been added successfully");
+                //update the Actors lists
+                getWorkersList();
+            });
+        }
+        else if (flag == false) {
+            $("#genreValidation").empty();
+            if (newGenre.GenreName == "") {
+                $("#genreValidation").append("<p style='color:red'>You have to input a genre</p>")
+            }
+            else {
+                $("#genreValidation").append("<p style='color:red'>This genre already exists</p>");
+            }
+        }
+    }
+    //Get requesto to get and update the worker (actors) List
+    function getWorkersList(){
+        var actionUrl = '@Url.Action("getWorkersGenre", "Movies")';
+        $.getJSON(actionUrl, updateWorGenList);
+    }
+    function updateWorGenList(json) {
+
+        window.workerGenreList = JSON.parse(json);
+
+        //Adding the update list of Actors
+        $("#actorListContainer").empty();
+        $("#actorListContainer").append("<select id='actorList' name='standard' class='custom-select'>");
+        $("#actorList").append("<option value=''>Please Select Actors</option>");
+        for (var x = 0; x < window.workerGenreList.WorkersCheck.length; x++) {
+            $("#actorList").append("<option value=" + window.workerGenreList.WorkersCheck[x].WorkerId + ">" + window.workerGenreList.WorkersCheck[x].Name + " " + window.workerGenreList.WorkersCheck[x].LastName + "</option>");
+        }
+        $("#actorList").append("</select>");
+        $("#actorList").customselect();
+        //Adding the update List of Genres
+        $("#genreListContainer").empty();
+        $("#genreListContainer").append("<select id='genreList' name='standard' class='custom-select'>");
+        $("#genreList").append("<option value=''>Please Select Genres</option>");
+        for (var x = 0; x < window.workerGenreList.GenreCheck.length; x++) {
+            $("#genreList").append("<option value=" + window.workerGenreList.GenreCheck[x].GenreId + ">" + window.workerGenreList.GenreCheck[x].GenreName + "</option>");
+        }
+        $("#genreList").append("</select>");
+        $("#genreList").customselect();
+    }
+
+</script>
+}

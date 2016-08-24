@@ -94,3 +94,8 @@ D:\ASPNet Projects\Movies\Movies\Movies\bin\roslyn\System.IO.FileSystem.dll
 D:\ASPNet Projects\Movies\Movies\Movies\bin\roslyn\System.IO.FileSystem.Primitives.dll
 D:\ASPNet Projects\Movies\Movies\Movies\bin\roslyn\vbc.exe.config
 D:\ASPNet Projects\Movies\Movies\Movies\bin\roslyn\vbc.rsp
+D:\ASPNet Projects\Movies\Movies\Movies\bin\System.Linq.Dynamic.dll
+D:\ASPNet Projects\Movies\Movies\Movies\bin\PagedList.dll
+D:\ASPNet Projects\Movies\Movies\Movies\bin\PagedList.Mvc.dll
+D:\ASPNet Projects\Movies\Movies\Movies\bin\PagedList.xml
+D:\ASPNet Projects\Movies\Movies\Movies\bin\PagedList.Mvc.xml

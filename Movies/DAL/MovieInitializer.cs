@@ -16,7 +16,6 @@ namespace Movies.DAL
         {
             List<Movie> movies = new List<Movie>();
             List<Worker> workers = new List<Worker>();
-            List<Role> roles = new List<Role>();
             List<Genre> genres = new List<Genre>();
             //Add movie
             string path = HttpContext.Current.Server.MapPath("~/Images/Covers/Troy.jpg");
@@ -27,8 +26,8 @@ namespace Movies.DAL
                 ReleaseDate = DateTime.Now,
                 Score = 5,
                 Cover = File.ReadAllBytes(path),
-                Trailer = "embed/Voai-4GS848",
-                Roles = roles,
+                Trailer = "Voai-4GS848",
+                
                 Genres = genres,
                 Workers = workers
             };
@@ -48,19 +47,8 @@ namespace Movies.DAL
             };
             workers.Add(worker1);
             workers.Add(worker2);
-            //Add Role
-            var role1 = new Role
-            {
-                RoleName = "Actor",
-                Movies = movies
-            };
-            var role2 = new Role
-            {
-                RoleName = "Director",
-                Movies = movies
-            };
-            roles.Add(role1);
-            roles.Add(role2);
+            
+            
             //Add Genre
             var genre1 = new Genre
             {
@@ -77,8 +65,6 @@ namespace Movies.DAL
            
             //Add to the db
             context.Movies.Add(movie);
-            context.Roles.Add(role1);
-            context.Roles.Add(role2);
             context.Genres.Add(genre1);
             context.Genres.Add(genre2);
             context.Workers.Add(worker1);
