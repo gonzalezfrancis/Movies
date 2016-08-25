@@ -21,10 +21,25 @@
 .marginTop-20{
     margin-top:20px;
 }
+.marginBott-20{
+    margin-bottom:20px;
+}
 .marginTop-50{
     margin-top:50px;
 }
 .marginTop-100{
      margin-top:100px;
 }
+.imageStyle{
+    margin-top:20px;
+    margin-left:20px;
+    height:270px;
+    width:190px;
+}
+.whiteSpace{
+    background-color:#ffffff;
+    height:50px;
+}
+
+
 

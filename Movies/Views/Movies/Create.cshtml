@@ -8,7 +8,7 @@
 <div class="alertPlaceHolder"></div>
 <div class="row">
     <div class="col-md-6">
-        @using (Html.BeginForm())
+        @using (Html.BeginForm("Create", "Movies", null, FormMethod.Post, new {enctype = "multipart/form-data"})) 
         {
             @Html.AntiForgeryToken()
 
@@ -23,7 +23,7 @@
                         @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
                     </div>
                 </div>
-
+   
                 <div class="form-group">
                     @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
@@ -31,7 +31,7 @@
                         @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
                     </div>
                 </div>
-
+                
                 <div class="form-group">
                     @Html.LabelFor(model => model.Score, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
@@ -51,7 +51,8 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.Cover, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.Cover, new { htmlAttributes = new { @class = "form-control" } })
+                        @*This the input for the file*@
+                        <input type="file" value="File" name="upload" />
                         @Html.ValidationMessageFor(model => model.Cover, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -69,6 +70,8 @@
                     <div class="col-md-2"><b>Genres:</b></div>
                     <ul id="currentgenreList" class="col-md-9"></ul>
                 </div>
+                @*Hidden field to store the genres*@
+                <input type="hidden" id="genreString" name="genreString" />
                 <div class="row marginTop-20">
                     @Html.LabelFor(model => model.Genres, htmlAttributes: new { @class = "control-label col-md-2" })                   
                         <div class="col-md-8">
@@ -88,7 +91,8 @@
                     <div class="col-md-2"><b>Actors:</b></div>
                     <ul id="currentWorkersList" class="col-md-9"></ul>
                 </div>
-
+                @*Hidden field to store the actors*@
+                <input type="hidden" id="workerString" name="workerString"/>
                 <div class="row marginTop-20">
                     @Html.LabelFor(model => model.Workers, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-8">
@@ -104,7 +108,7 @@
                     </div>
                 </div>
 
-                <div class="marginTop-20">
+                <div class="marginTop-50">
                     <div class="col-md-offset-5 ">
                         <input type="submit" value="Create" class="btn btn-warning" />
                     </div>
@@ -164,19 +168,19 @@
     $(document).ready(function () {
         window.workerGenreList;
         window.currentGenreListId = [];
+        //window.currentGenreListString;
+        //window.currentWorkerListString;
+        window.currentWorkerListId = [];
         $(".datepicker").datepicker();
         $("#actorList").customselect();
         $("#genreList").customselect();
         //TODO:Chec for the trigger selctor
-        $(".dlBt").on("click", "span", function (event) {
-            alert("hola");
-        });
+        
         getWorkersList();
 
     });
     
     //Bootstrap alert
-
     bootstrap_alert = function (message) {
         $(".alertPlaceHolder").html("<div class='alert alert-success alert-dismissible' role='alert'>" +
                                     "<button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>"+
@@ -184,8 +188,34 @@
     }
     //Add a new actor to the cureent movie
     function addWorker() {
-
-
+        var element = $("#actorList").val();
+        var flag = false;
+        //check if a genre is selected
+        if (element != "") {
+            //Check if there is not a repeated value
+            for (var x = 0; x < window.currentWorkerListId.length; x++) {
+                if (element == window.currentWorkerListId[x]) {
+                    flag = true;
+                }
+            }
+            if (flag == false) {
+                window.currentWorkerListId.push(element);
+                $("#currentWorkersList").empty();
+                //Test
+                
+                for (var x = 0; x < window.currentWorkerListId.length; x++) {
+                    //Create a list using the Id and getting the names
+                    $("#currentWorkersList").append("<li><span class='col-md-4'>" +
+                        window.workerGenreList.WorkersCheck[window.currentWorkerListId[x] - 1].Name + " " +
+                        window.workerGenreList.WorkersCheck[window.currentWorkerListId[x] - 1].LastName + "</span>" +
+                        "<button type='button' id='w" + (window.currentWorkerListId[x]) + "'class='btn btn-danger col-md-6'>Delete</button></li>");
+                }
+                //Covert the current array into a string to post it with the form
+                $("#workerString").val("");
+                $("#workerString").val(window.currentWorkerListId.toString());
+                
+            }
+        }
     }
     //Function to send and new worker(actor) to the database
     function addWorkerDb() {
@@ -245,29 +275,55 @@
                 $("#currentgenreList").empty();
                 for (var x = 0; x < window.currentGenreListId.length; x++) {
                     //Create a list using the Id and getting the names
-                    $("#currentgenreList").append("<li class='marginTop-50'><span class='col-md-4'>" +
+                    $("#currentgenreList").append("<li><span class='col-md-4'>" +
                         window.workerGenreList.GenreCheck[window.currentGenreListId[x] - 1].GenreName + "</span>" + " " +
-                        "<span id='" + (window.currentGenreListId[x] - 1) + "' "+
-                        "class='dlBt btn btn-danger col-md-6'>Delete</span></li>");
+                        "<button type='button' id='g" + (window.currentGenreListId[x]) + "'class='btn btn-danger col-md-6'>Delete</button></li>");
                 }
+                //Covert the current array into a string to post it with the form
+                $("#genreString").val("");
+                $("#genreString").val(window.currentGenreListId.toString());
             }
         }       
     }
-    //Function to delete genre from the movie List
-    function delGenre() {
-        $("#currentgenreList").empty();
+    //delete element from the Actors and Genre list for the current working movie
+    $(document).on('click', 'button', function () {
+        var self = this;
+        var id = self.id.toString();
+        var selector = id.slice(0, 1);
+        var element = id.slice(1, 2);
         
-        
-        window.currentGenreListId.findIndex()
-        
-        window.currentGenreListId.splice(value,1);
-        for (var x = 0; x < window.currentGenreListId.length; x++) {
-            $("#currentgenreList").append("<li class='marginTop-50'><span class='col-md-4'>" +
-                        window.workerGenreList.GenreCheck[window.currentGenreListId[x] - 1].GenreName + "</span>" + " " +
-                        "<span id='" + (window.currentGenreListId[x] - 1) + "' "+
-                        "class='dlBt  btn btn-danger col-md-6'>Delete</span></li>");
+        //If the id starts with g, it is a genre element
+        if (selector == "g"){
+            $("#currentgenreList").empty();
+            var index = (window.currentGenreListId.indexOf(element));
+            window.currentGenreListId.splice(index, 1);
+            for (var x = 0; x < window.currentGenreListId.length; x++) {
+                $("#currentgenreList").append("<li><span class='col-md-4'>" +
+                            window.workerGenreList.GenreCheck[window.currentGenreListId[x] - 1].GenreName + "</span>" + " " +
+                            "<button type='button' id='g" + (window.currentGenreListId[x]) + "'class='btn btn-danger col-md-6'>Delete</button></li>");
+            }
+            //Covert the current array into a string to post it with the form
+            $("#genreString").val("");
+            $("#genreString").val(window.currentGenreListId.toString());
         }
-    }
+        //If the id starts with w, it is a actor(worker) element
+        if (selector == "w") {
+            $("#currentWorkersList").empty();
+            var index = (window.currentWorkerListId.indexOf(element));
+            window.currentWorkerListId.splice(index, 1);
+            for (var x = 0; x < window.currentWorkerListId.length; x++) {
+                //Create a list using the Id and getting the names
+                $("#currentWorkersList").append("<li><span class='col-md-4'>" +
+                    window.workerGenreList.WorkersCheck[window.currentWorkerListId[x] - 1].Name + " " +
+                    window.workerGenreList.WorkersCheck[window.currentWorkerListId[x] - 1].LastName + "</span>" +
+                    "<button type='button' id='w" + (window.currentWorkerListId[x]) + "'class='btn btn-danger col-md-6'>Delete</button></li>");
+            }
+            //Covert the current array into a string to post it with the form
+            $("#workerString").val("");
+            $("#workerString").val(window.currentWorkerListId.toString());
+        }
+    });
+    //Add a new Genre into the database
     function addGenreDb() {
         var newGenre = {};
         //Flag to check if genre already exist

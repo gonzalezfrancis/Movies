@@ -12,8 +12,8 @@
     @Html.AntiForgeryToken()
     <div class="middlePage">
         <div class="row">
-                <div class="col-md-11"><input class="form-control" type="text" placeholder="Search" /></div>
-                <div class="col-md-1"><input type="submit" value="Search" class="btn btn-default" /></div>
+                <div class="col-md-11"><input class="form-control" type="text" placeholder="Search" id="searchBox"/></div>
+                <div class="col-md-1"><input type="submit" value="Search" class="btn btn-default" id="searchButton"/></div>
         </div>
     </div>
 }
@@ -29,8 +29,8 @@
             <div class="col-md-offset-2"></div>
             <div class="col-md-3"><img class="img-responsive imageStyle" src="@Url.Action("GetImage", "Movies", new { id = item.MovieId })" /></div>
             <div class="col-md-7">
-                <div class="row">
-                    <div class="col-md-12 margitTop-20"><b>@Html.DisplayNameFor(Model => Model.First().Title) :</b><p>@Html.DisplayFor(i => item.Title)</p></div>
+                <div class="row marginBott-20">
+                    <div class="col-md-12 marginTop-20 text-center"><b>@Html.DisplayFor(i => item.Title)</b></div>
                 </div>
                 <div class="row">
                     <div class="col-md-12"><b>@Html.DisplayNameFor(Model => Model.First().Description) :</b><p>@Html.DisplayFor(i => item.Description)</p></div>
@@ -43,8 +43,12 @@
                 </div>
             </div>
         </div>
-        <div class="row"><div class="col-md-12 text-center"><a class="btn btn-primary videoPopUp fancybox.iframe" href="@string.Format("https://www.youtube.com/embed/{0}?autoplay=1", item.Trailer)">Watch Trailer</a></div>  </div>
-        <div class="row table-bordered margitTop-20"></div>
+        <div class="row marginBott-20">
+            <div class="col-md-12 text-center">
+                <a class="btn btn-primary videoPopUp fancybox.iframe" href="@string.Format("https://www.youtube.com/embed/{0}?autoplay=1", item.Trailer)">Watch Trailer</a>
+            </div>  
+        </div>
+        <div class="row whiteSpace"></div>
     }
 </section>
     @Html.PagedListPager(Model, page => Url.Action("Movies", "Index", new { page }))
@@ -98,6 +102,29 @@
                     openEffect: 'none',
                     closeEffect: 'none'
                 });
+
+                //Autocomplete Search Box
+                $("#searchBox").keyup(function () {
+                    var query = $(this).val();
+                    
+                    getSearch(query);
+                });
+
+                function getSearch(query) {
+       
+                    $.ajax({
+                        url: '@Url.Action("search", "Movies")',
+                        data: { "query": query },
+                        type: 'POST',
+                        dataType: 'json',
+                        success: function (response) {
+
+                        }
+                    });
+                        
+                    
+                    
+                }
             });
         </script>
     }

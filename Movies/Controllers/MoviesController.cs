@@ -11,7 +11,7 @@ using Movies.DAL;
 using Movies.Models;
 using PagedList;
 using PagedList.Mvc;
-using System.Web.Script.Serialization;
+//using System.Web.Script.Serialization;
 
 namespace Movies.Controllers
 {
@@ -26,11 +26,10 @@ namespace Movies.Controllers
             return View(db.Movies.ToList().ToPagedList(page ?? 1, 5));
         }
 
-        //GET: Image from the databse
-        public ActionResult GetImage(int id)
+        //GET: Movies/IndexAdmin
+        public ActionResult IndexAdmin()
         {
-            byte[] image = db.Movies.SingleOrDefault(i => i.MovieId == id).Cover;
-            return File(image, "image/jpg");
+            return View(db.Movies.ToList());
         }
 
         // GET: Movies/Details/5
@@ -65,10 +64,34 @@ namespace Movies.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "MovieId,Title,Description,ReleaseDate,Score,Cover,Trailer")] Movie movie)
+        public ActionResult Create([Bind(Include = "Title, Description, Score, ReleaseDate, Trailer")]Movie movie, HttpPostedFileBase upload, string genreString, string workerString)
         {
+            List<Genre> myGenre = new List<Genre>();
+            List<Worker> myWorker = new List<Worker>();
             if (ModelState.IsValid)
             {
+                //This is the cover image
+                using (var reader = new System.IO.BinaryReader(upload.InputStream))
+                {
+                    movie.Cover = reader.ReadBytes(upload.ContentLength);
+                }
+                //This are the keys for the Genres converted to int array
+                int[] genreArray = Array.ConvertAll(genreString.Split(','), g => int.Parse(g));
+                //This are the keys for the Genres converted to int array
+                int[] workerArray = Array.ConvertAll(workerString.Split(','), w => int.Parse(w));
+                foreach (int item in genreArray)
+                {
+                    Genre tempGenre = db.Genres.SingleOrDefault(g => g.GenreId == item);
+                    myGenre.Add(tempGenre);
+                }
+                foreach(int item in workerArray)
+                {
+                    Worker tempWorker = db.Workers.SingleOrDefault(w => w.WorkerId == item);
+                    myWorker.Add(tempWorker);
+                }
+                //copy the List of genres and workers into the Movie
+                movie.Genres = myGenre;
+                movie.Workers = myWorker; 
                 db.Movies.Add(movie);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -153,6 +176,13 @@ namespace Movies.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
+        //GET: Movies/GetImage Image from the databse
+        public ActionResult GetImage(int id)
+        {
+            byte[] image = db.Movies.SingleOrDefault(i => i.MovieId == id).Cover;
+            return File(image, "image/jpg");
+        }
+
         //Create a new Actor
         [HttpPost]
         public void postWorker(Worker jsonObj)
@@ -168,6 +198,17 @@ namespace Movies.Controllers
         {
             db.Genres.Add(jsonObj);
             db.SaveChanges();
+        }
+
+        //Autocomplete Search
+        public JsonResult search(string query)
+        {
+            List<Movie> search = new List<Movie>();
+            if(!string.IsNullOrEmpty(query))
+            {
+                search = db.Movies.Where(s => s.Title.StartsWith(query)).ToList();
+            }
+            return Json(search, JsonRequestBehavior.AllowGet);
         }
         protected override void Dispose(bool disposing)
         {
