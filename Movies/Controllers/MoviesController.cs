@@ -201,14 +201,22 @@ namespace Movies.Controllers
         }
 
         //Autocomplete Search
+        [HttpPost]
         public JsonResult search(string query)
         {
             List<Movie> search = new List<Movie>();
+            //Search for Title name start with the query string
             if(!string.IsNullOrEmpty(query))
             {
                 search = db.Movies.Where(s => s.Title.StartsWith(query)).ToList();
             }
-            return Json(search, JsonRequestBehavior.AllowGet);
+            //Convert into JSON
+            var json = JsonConvert.SerializeObject(search, Formatting.None,
+                        new JsonSerializerSettings()
+                        {
+                            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                        });
+            return Json(json, JsonRequestBehavior.AllowGet);
         }
         protected override void Dispose(bool disposing)
         {

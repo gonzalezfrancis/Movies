@@ -7,16 +7,14 @@
     ViewBag.Title = "Index";
 }
 @*Search button and input box*@
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    <div class="middlePage">
-        <div class="row">
-                <div class="col-md-11"><input class="form-control" type="text" placeholder="Search" id="searchBox"/></div>
-                <div class="col-md-1"><input type="submit" value="Search" class="btn btn-default" id="searchButton"/></div>
-        </div>
+
+<div class="middlePage ui-widget">
+    <div class="row">
+            <div class="col-md-11"><input class="form-control" type="text" placeholder="Search" id="searchBox"/></div>
+            <div class="col-md-1"><input type="button" value="Search" class="btn btn-default" id="searchButton"/></div>
     </div>
-}
+</div>
+
 
 <h2 class="text-center">Movies</h2>
 
@@ -91,6 +89,7 @@
         });*@
             
             $(document).ready(function () {
+                var query;
                 $(".videoPopUp").fancybox({
                     maxWidth: 800,
                     maxHeight: 600,
@@ -102,27 +101,86 @@
                     openEffect: 'none',
                     closeEffect: 'none'
                 });
-
-                //Autocomplete Search Box
+                
+                ////////////////TEST AUTOCOMPLETE
                 $("#searchBox").keyup(function () {
-                    var query = $(this).val();
-                    
-                    getSearch(query);
+                   query = $(this).val();                  
                 });
+                $("#searchBox").autocomplete({
+                    source: function (request, response) {
+                        $.ajax({
+                            url: '@Url.Action("search", "Movies")',
+                            data: { "query": query },
+                            type: 'POST',
+                            dataType: 'json',
+                            success: function (data) {
+                                var parsed = JSON.parse(data);
+                                var myArray = [];
+                                for(var x = 0; x < parsed.length; x++){
+                                    var newObj = {
+                                        Title: parsed[x].Title,
+                                        MovieId: parsed[x].MovieId,
+                                        Cover: parsed[x].Cover,
+                                        ReleaseDate: parsed[x].ReleaseDate
+                                    }; 
+                                    myArray[x] = newObj;
+                                }                                   
+                                response(myArray);
+                            },
+                            error: function (result) {
+                                var errorMsg = " Problem in processing your request !!";
+                                alert(errorMsg);
+                            }
+                        });
+                    },
+                    create: function (event, ui) {
+                        $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+                            
+                            
+                            return $('<li style="width:300px;">')                           
+                                .append("<img style='height:150px;width:120px;margin-right:150px;' src='"+'@Url.Action("GetImage", "Movies")?id='+ item.MovieId+"'/>"+
+                                "<a href='" + '@Url.Action("Details", "Movies")?id=' + item.MovieId + "'><b>" + item.Title + "</b>(movie "+item.ReleaseDate+")</a>")
+                                .appendTo(ul);
+                        };
+                    }
+                });
+                //}).data('autocomplete')._renderItem = function (ul, item) {
+                //    alert(item);
+                //    return ("<li>")
+                //            .append("<img src=" + " alt=" + item.Title + "/> ")
+                //            .append("<a>" + item.Title + "</a>")
+                //            .appendTo(ul);
+                //}
+
+                /////////////////
+                //Autocomplete Search Box
+                //$("#searchBox").keyup(function () {
+                //    var query = $(this).val();
+                //    window.search;
+                //    getSearch(query);
+                //});
 
                 function getSearch(query) {
-       
+                    @*var arrayTitle = [];
+                    var arrayId = [];
                     $.ajax({
                         url: '@Url.Action("search", "Movies")',
                         data: { "query": query },
                         type: 'POST',
                         dataType: 'json',
-                        success: function (response) {
-
+                        success: function (jsonObj) {
+                            var response = JSON.parse(jsonObj);
+                            
+                            for (var x = 0; x < response.length; x++) {
+                                arrayTitle[x] = response[x].Title;
+                                arrayId[x] = response[x].MovieId;
+                            }                            
                         }
                     });
-                        
-                    
+                    $("#searchBox").autocomplete({
+                        source: arrayResponse.Title
+                    }).data('autocomplete')._renderItem = function();*@
+
                     
                 }
             });

@@ -33,7 +33,11 @@ namespace Movies
                       "~/Content/bootstrap-datepicker.css",
                       "~/Content/jquery-customselect.css",
                       "~/Content/site.css"));
-
+            //Jquery UI
+            bundles.Add(new StyleBundle("~/Content/jquery-ui").Include(
+                        "~/Content/themes/base/jquery-ui.css"));
+            bundles.Add(new ScriptBundle("~/bundles/jquery-UI").Include(
+                        "~/Scripts/jquery-ui-{version}.js"));
             //FancyBox
             bundles.Add(new StyleBundle("~/Content/fancyBox").Include(
                     "~/Content/jquery.fancybox.css",
