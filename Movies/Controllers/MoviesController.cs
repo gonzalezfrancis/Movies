@@ -20,12 +20,31 @@ namespace Movies.Controllers
         private MovieContext db = new MovieContext();
 
         // GET: Movies
-        public ActionResult Index(int? page)
+        public ActionResult Index()
         {
             //If the page paramet is == null then use 1, second parameter is the page size
-            return View(db.Movies.ToList().ToPagedList(page ?? 1, 5));
+            return View(db.Movies.OrderByDescending(i => i.Score).Take(16).ToList());
         }
 
+        //GET: Movies/Search
+        //public ActionResult Search(int? page)
+        //{
+
+        //    return View();
+        //}
+
+       
+        public ActionResult Search(int? page, string query)
+        {
+            List<Movie> search = new List<Movie>();
+            //Search for Title name start with the query string
+            if (!string.IsNullOrEmpty(query))
+            {
+                search = db.Movies.Where(s => s.Title.StartsWith(query)).ToList();
+            }
+            
+            return View("Search", search.ToPagedList(page ?? 1, 5));
+        }
         //GET: Movies/IndexAdmin
         public ActionResult IndexAdmin()
         {
@@ -202,7 +221,7 @@ namespace Movies.Controllers
 
         //Autocomplete Search
         [HttpPost]
-        public JsonResult search(string query)
+        public JsonResult SearchAutoComplete(string query)
         {
             List<Movie> search = new List<Movie>();
             //Search for Title name start with the query string

@@ -1,0 +1,202 @@
+﻿@using PagedList;
+@using PagedList.Mvc;
+@model IPagedList<Movies.Models.Movie>
+
+@Styles.Render("~/Content/moviesIndex")
+@{
+    ViewBag.Title = "Index";
+}
+@*Search button and input box*@
+
+<div class="middlePage ui-widget">
+    <div class="row">
+            <div class="col-md-11"><input class="form-control" type="text" placeholder="Search" id="searchBox"/></div>
+            <div class="col-md-1"><input type="button" value="Search" class="btn btn-default" id="searchButton"/></div>
+    </div>
+</div>
+
+
+<h2 class="text-center">Movies</h2>
+
+@*The results section*@
+@{
+@*Check if the List is empty*@
+if (Model.Count == 0)
+{
+    <div class="row">
+        <h1 class="text-center redText">No result!</h1>
+        
+    </div>
+}
+@:<section class="table" id="mainContent">
+    foreach (var item in Model)
+    {
+            <div class="row rowHeight">
+                
+                <div class="col-md-3"><img class="img-responsive imageStyle" src="@Url.Action("GetImage", "Movies", new { id = item.MovieId })" /></div>
+                <div class="col-md-7">
+                    <div class="row marginTop-20">
+                        <p class="text-center"><b class="textSize-200">@Html.DisplayFor(i => item.Title)</b></p>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12"><b>@Html.DisplayNameFor(Model => Model.First().Description) :</b><p>@Html.DisplayFor(i => item.Description)</p></div>
+                    </div>
+                    <div class="row marginTop-20">
+                        <div class="col-md-6"><b>@Html.DisplayNameFor(Model => Model.First().ReleaseDate) :</b><p>@Html.DisplayFor(i => item.ReleaseDate)</p></div>
+                        <div class="col-md-6"><b>@Html.DisplayNameFor(Model => Model.First().Score) :</b><p>@Html.DisplayFor(i => item.Score)</p></div>
+                    </div>
+                    <div class="row marginTop-20">
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="row marginBott-20">
+                <div class="col-md-3 glyphiconSize text-center"><a href="@Url.Action("Details", "Movies")?id=@item.MovieId">Details <span class="glyphicon glyphicon-search"></span></a></div>
+                <div class="col-md-9 text-center">
+                    <a class="btn btn-primary videoPopUp fancybox.iframe" href="@string.Format("https://www.youtube.com/embed/{0}?autoplay=1", item.Trailer)">Watch Trailer</a>
+                </div>  
+            </div>
+            <div class="row whiteSpace"></div>
+        }
+    
+@:</section>
+}
+    @Html.PagedListPager(Model, page => Url.Action("Movies", "Index", new { page }))
+    @******************** Test using Knockout ******************@
+    @*<div data-bind="foreach: Movies">
+            <div class="row rowHeight">
+                <div class="col-md-offset-2"></div>
+                <div class="col-md-3"><img class="img-responsive imageStyle" data-bind="attr: {src: '@Url.Action("GetImage", "Movies")/'+ MovieId}" /></div>
+                <div class="col-md-7">
+                    <div class="row">
+                        <div class="col-md-12 margitTop-20"><b>Title: </b><p data-bind="text: Title"></p></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12"><b>Desciption: </b><p data-bind="text: Description"></p></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12"><b>Release Date: </b><p data-bind="text: ReleaseDate"></p></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12"><b>Score: </b><p data-bind="text: Score"></p></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row"><div class="col-md-12 text-center"><a class="videoPopUp fancybox.iframe" data-bind="attr: {href:'https://www.youtube.com/embed/'+Trailer+'?autoplay=1'}">Trailer</a></div>  </div>
+        </div>*@
+
+    @*****************************************************************@
+
+    @section scripts {
+        <script>
+            @*$(document).ready(function () {
+            function ViewModel(Movies) {
+                var self = this;
+
+                self.Movies = Movies;
+            };
+
+            var viewModel = new ViewModel(@Html.HtmlConvertToJson(Model));
+            ko.applyBindings(viewModel);
+        });*@
+
+            $(document).ready(function () {
+                var query;
+                $(".videoPopUp").fancybox({
+                    maxWidth: 800,
+                    maxHeight: 600,
+                    fitToView: false,
+                    width: '70%',
+                    height: '70%',
+                    autoSize: false,
+                    closeClick: false,
+                    openEffect: 'none',
+                    closeEffect: 'none'
+                });
+
+                //Autocomplete Search
+                $("#searchBox").keyup(function () {
+                   query = $(this).val();
+                });
+                //Press enter function in the search
+                $("#searchBox").keydown(function (event) {
+                    var keycode = (event.keyCode ? event.keyCode : event.which);
+                    if (keycode == '13') {
+                        var url = '@Url.Action("Search", "Movies")' + "?query=" + query;
+                        window.location.href = url;
+                    }
+                });
+                //Click the serach button
+                $("#searchButton").click(function () {
+                    var url = '@Url.Action("Search", "Movies")' + "?query=" + query;
+                    window.location.href = url;
+                });
+                $("#searchBox").autocomplete({
+                    source: function (request, response) {
+                        $.ajax({
+                            url: '@Url.Action("SearchAutoComplete", "Movies")',
+                            data: { "query": query },
+                            type: 'POST',
+                            dataType: 'json',
+                            success: function (data) {
+                                var parsed = JSON.parse(data);
+                                var myArray = [];
+                                for(var x = 0; x < parsed.length; x++){
+                                    var newObj = {
+                                        Title: parsed[x].Title,
+                                        MovieId: parsed[x].MovieId,
+                                        Cover: parsed[x].Cover,
+                                        ReleaseDate: parsed[x].ReleaseDate
+                                    };
+                                    myArray[x] = newObj;
+                                    //Limit the autocomplete to 5 results
+                                    if (x == 4) {
+                                        x = parsed.length - 1;
+                                    }
+                                }
+                                response(myArray);
+                            },
+                            error: function (result) {
+                                var errorMsg = " Problem in processing your request !!";
+                                alert(errorMsg);
+                            }
+                        });
+                    },
+                    create: function (event, ui) {
+                        $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+
+
+                            return $('<li style="width:500px;">')
+                                .append("<img style='height:150px;width:120px;margin-right:150px;' src='"+'@Url.Action("GetImage", "Movies")?id='+ item.MovieId+"'/>"+
+                                "<a href='" + '@Url.Action("Details", "Movies")?id=' + item.MovieId + "'><b>" + item.Title + "</b>(movie "+item.ReleaseDate+")</a><br/>")
+                                .append("<a style='font-size:30px;' href='" + '@Url.Action("Search", "Movies")?query=' + query + "'>Show All</a>")
+                                .appendTo(ul);
+                        };
+                    }
+                });
+                function getSearch(query) {
+                    @*var arrayTitle = [];
+                    var arrayId = [];
+                    $.ajax({
+                        url: '@Url.Action("search", "Movies")',
+                        data: { "query": query },
+                        type: 'POST',
+                        dataType: 'json',
+                        success: function (jsonObj) {
+                            var response = JSON.parse(jsonObj);
+
+                            for (var x = 0; x < response.length; x++) {
+                                arrayTitle[x] = response[x].Title;
+                                arrayId[x] = response[x].MovieId;
+                            }
+                        }
+                    });
+                    $("#searchBox").autocomplete({
+                        source: arrayResponse.Title
+                    }).data('autocomplete')._renderItem = function();*@
+
+
+                }
+            });
+        </script>
+    }
