@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using Movies.DAL;
 using Movies.Models;
 using PagedList;
+using Microsoft.AspNet.Identity;
 using PagedList.Mvc;
 //using System.Web.Script.Serialization;
 
@@ -235,6 +236,26 @@ namespace Movies.Controllers
                         {
                             ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                         });
+            return Json(json, JsonRequestBehavior.AllowGet);
+        }
+
+        ////Favorites for the user
+        public JsonResult GetFavorites()
+        {
+            List<Movie> favorites = new List<Movie>();
+            //Check if the user is loged in
+            if (User.Identity.IsAuthenticated)
+            {
+                //Get all favorites movies from the user
+                string userId = User.Identity.GetUserId();
+                var user = db.Users.SingleOrDefault(u => u.Id == userId);
+                favorites = user.Movies.ToList();
+            }
+            var json = JsonConvert.SerializeObject(favorites, Formatting.None,
+                        new JsonSerializerSettings()
+                        {
+                            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                        }); 
             return Json(json, JsonRequestBehavior.AllowGet);
         }
         protected override void Dispose(bool disposing)

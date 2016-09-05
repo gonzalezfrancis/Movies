@@ -1,5 +1,6 @@
 ﻿@model Movies.Models.Movie
 @using Movies.Models
+@using Microsoft.AspNet.Identity
 @{
     ViewBag.Title = "Details";
 }
@@ -23,6 +24,11 @@
             <div class="col-md-12"><p class="text-center">@Html.DisplayFor(model => model.Score)</p></div>
         </div>
         <hr/>
+        @*Add favorites*@
+        @if(User.Identity.IsAuthenticated)
+        {
+            <div class="row text-center"><a onclick="addFavorites()"><span class="glyphicon glyphicon-plus"></span>Add to Favorites</a></div>
+        }
         @*Genres*@
         <div class="row"><div class="col-md-1"><div class="col-md-2"><b>Genre:</b></div></div></div>
         <div class="row marginTop-20">
@@ -52,7 +58,16 @@
 </p>
 @section scripts{
     <script>
-        $(document).ready(function () { 
+        @if(User.Identity.IsAuthenticated)
+        {
+            @:window.Log = true;
+        }
+        else
+        {
+            @:window.Log = false;
+        }
+        $(document).ready(function () {
+         window.favorites;
             $(".videoPopUp").fancybox({
                 maxWidth: 800,
                 maxHeight: 600,
@@ -64,6 +79,35 @@
                 openEffect: 'none',
                 closeEffect: 'none'
             });
+            if (window.Log == true)
+            {
+                GetFavorites();
+            }
+            //Get list favorites movies
+            function GetFavorites() {
+                $.ajax({
+                    url: '@Url.Action("getFavorites", "Movies")',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        window.favorites = JSON.parse(data);
+                        //TODO: Check if the movie is already in favorites
+                        
+                    }
+                });
+            }
+
         });
+        function addFavorites() {
+            $.ajax({
+                url: '@Url.Action("addFavorites", "Movies")',
+                type: 'POST',
+                dataType: 'json',
+                success: function (data) {
+                    alert("Hola");
+                }
+            })
+        }
+
     </script>    
 }

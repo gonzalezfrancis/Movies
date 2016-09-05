@@ -38,6 +38,9 @@ namespace Movies.Models
         public virtual ICollection<Worker> Workers { get; set; }
         [JsonIgnore]
         public virtual ICollection<Genre> Genres { get; set; }
+
+        [JsonIgnore]
+        public virtual ICollection<ApplicationUser> Users { get; set; }
         
     }
 }
