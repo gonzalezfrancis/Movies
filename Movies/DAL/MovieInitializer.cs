@@ -10,7 +10,7 @@ using System.IO;
 
 namespace Movies.DAL
 {
-    public class MovieInitializer : DropCreateDatabaseAlways<MovieContext>
+    public class MovieInitializer : DropCreateDatabaseIfModelChanges<MovieContext>
     {
         protected override void Seed(MovieContext context)
         {

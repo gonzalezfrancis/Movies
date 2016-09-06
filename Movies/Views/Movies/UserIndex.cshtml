@@ -1,0 +1,47 @@
+﻿@model IEnumerable<Movies.Models.Movie>
+
+@{
+    ViewBag.Title = "UserIndex";
+}
+
+<h2>Your Favorites</h2>
+
+<div class="alertPlaceHolder"></div>
+<div id="favorites">
+    @Html.Partial("_FavoritePartial", Model)
+</div>
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $(".moviesItem").on('click', function (event) {
+                var movieId = String(event.target.id) + " ";
+                alert(movieId);
+                $.ajax({
+                    url:'@Url.Action("DeleteFavorites", "Movies")',
+                    data: { "movie": movieId },
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (data) {
+                        var parsed = JSON.parse(data);
+                        alert(parsed);
+                    }
+                });
+            });
+        });
+        
+        function deleteSuccess(result) {
+            //Bootstrap alert
+            bootstrap_alert("The movie has been delete Successfully");
+            
+        }
+        function deleteUnsuccess() {
+            alert("An error has occurrered!!");
+        }
+        //Bootstrap alert
+        bootstrap_alert = function (message) {
+            $(".alertPlaceHolder").html("<div class='alert alert-warning alert-dismissible' role='alert'>" +
+                                        "<button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>" +
+                                        "&times;</span><span class='sr-only'>Close</span></button><strong>" + message + "</strong></div>");
+        }
+    </script>    
+}

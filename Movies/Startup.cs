@@ -13,7 +13,7 @@ namespace Movies
         {
             ConfigureAuth(app);
             //TODO: set up roles to admin users
-            //createRolesAndUsers();
+            createRolesAndUsers();
         }
 
         //In this method the default admin role will be create
@@ -35,8 +35,9 @@ namespace Movies
                 var user = new ApplicationUser();
                 //user.FirstName = "Fran";
                 //user.LastName = "Gonzalez";
+                user.UserName = "gonzalezfrancis@hotmail.com";
                 user.Email = "gonzalezfrancis@hotmail.com";
-                user.PasswordHash = "";
+                
                 user.EmailConfirmed = true;
 
                 string userPWD = "Fmgg@2284";
@@ -45,7 +46,7 @@ namespace Movies
                 //Add default user role admin
                 if(chkUser.Succeeded)
                 {
-                    var result = UserManager.AddToRole(user.Id, "Admin");
+                    var result1 = UserManager.AddToRole(user.Id, "Admin");
                 }
             }
         }

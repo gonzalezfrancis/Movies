@@ -47,11 +47,32 @@ namespace Movies.Controllers
             return View("Search", search.ToPagedList(page ?? 1, 5));
         }
         //GET: Movies/IndexAdmin
+        [Authorize(Roles = "Admin")]
         public ActionResult IndexAdmin()
         {
             return View(db.Movies.ToList());
         }
 
+        //GET: Movies/UserIndex
+        [Authorize]
+        public ActionResult UserIndex()
+        { 
+            //Check if the user is loged in
+            if (User.Identity.IsAuthenticated)
+            {
+                //Get all favorites movies from the user
+                string userId = User.Identity.GetUserId();
+                var user = db.Users.SingleOrDefault(u => u.Id == userId);
+                //Return the favorites movies for the user
+                return View(user.Movies.ToList());
+            }
+            return View();
+        }
+        //GET: Partial view
+        public ActionResult FavoritePartial()
+        {
+            return PartialView("_FavoritePartial");
+        }
         // GET: Movies/Details/5
         public ActionResult Details(int? id)
         {
@@ -68,6 +89,7 @@ namespace Movies.Controllers
         }
 
         // GET: Movies/Create
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             //Send the complete List of Actors and Genren into the view 
@@ -84,6 +106,7 @@ namespace Movies.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult Create([Bind(Include = "Title, Description, Score, ReleaseDate, Trailer")]Movie movie, HttpPostedFileBase upload, string genreString, string workerString)
         {
             List<Genre> myGenre = new List<Genre>();
@@ -121,6 +144,7 @@ namespace Movies.Controllers
         }
 
         // GET: Movies/Edit/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -140,6 +164,7 @@ namespace Movies.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit([Bind(Include = "MovieId,Title,Description,ReleaseDate,Score,Cover,Trailer")] Movie movie)
         {
             if (ModelState.IsValid)
@@ -152,6 +177,7 @@ namespace Movies.Controllers
         }
 
         // GET: Movies/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -169,6 +195,7 @@ namespace Movies.Controllers
         // POST: Movies/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult DeleteConfirmed(int id)
         {
             Movie movie = db.Movies.Find(id);
@@ -207,6 +234,7 @@ namespace Movies.Controllers
         [HttpPost]
         public void postWorker(Worker jsonObj)
         {
+
             //Store the new Actor in the db
             db.Workers.Add(jsonObj);
             db.SaveChanges();
@@ -240,6 +268,7 @@ namespace Movies.Controllers
         }
 
         ////Favorites for the user
+        [Authorize]
         public JsonResult GetFavorites()
         {
             List<Movie> favorites = new List<Movie>();
@@ -257,6 +286,36 @@ namespace Movies.Controllers
                             ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                         }); 
             return Json(json, JsonRequestBehavior.AllowGet);
+        }
+
+        //Add favorites in the user List
+        [Authorize]
+        public void AddFavorites(string movie)
+        {
+            int movieId = Convert.ToInt32(movie);
+            //Get the current user
+            string userId = User.Identity.GetUserId();
+            var user = db.Users.SingleOrDefault(u => u.Id == userId);
+            //Get the movie
+            var myMovie = db.Movies.SingleOrDefault(m => m.MovieId == movieId);
+            user.Movies.Add(myMovie);
+            db.SaveChanges();
+            
+        }
+        [Authorize]
+        public ActionResult DeleteFavorites(string movie)
+        {
+            int movieId = Int32.Parse(movie);
+            
+            //Get the current user
+            string userId = User.Identity.GetUserId();
+            var user = db.Users.SingleOrDefault(u => u.Id == userId);
+            //Get the movie
+            var myMovie = db.Movies.SingleOrDefault(m => m.MovieId == movieId);
+            user.Movies.Remove(myMovie);
+            db.SaveChanges();
+            //TODO: check return type json format
+            return PartialView("_FavoritePartial", user.Movies.ToList());
         }
         protected override void Dispose(bool disposing)
         {

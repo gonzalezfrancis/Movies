@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Movies.Models.Movie>
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReleaseDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Score)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.Trailer)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReleaseDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Score)
+            </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Trailer)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Details", new { id = item.MovieId }) |
+                <span id="@item.MovieId" class="moviesItem">Delete</span>
+                @*@Ajax.ActionLink("Delete", "DeleteFavorites", new { movie = item.MovieId }, new AjaxOptions { HttpMethod = "GET", OnSuccess = "deleteSuccess()", OnFailure = "deleteUnsuccess()" })*@
+            </td>
+        </tr>
+    }
+
+</table>

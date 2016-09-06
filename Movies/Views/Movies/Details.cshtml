@@ -99,14 +99,16 @@
 
         });
         function addFavorites() {
+            var movie = '@Model.MovieId'
             $.ajax({
                 url: '@Url.Action("addFavorites", "Movies")',
+                data: { "movie": movie },
                 type: 'POST',
                 dataType: 'json',
-                success: function (data) {
+                success: function () {
                     alert("Hola");
                 }
-            })
+            });
         }
 
     </script>    

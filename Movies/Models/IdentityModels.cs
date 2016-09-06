@@ -10,6 +10,7 @@ namespace Movies.Models
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
     {  
+
         //Collection of favorities movies of each user
         public virtual ICollection<Movie> Movies { get; set; }
 
@@ -35,5 +36,6 @@ namespace Movies.Models
             return new ApplicationDbContext();
         }
 
+        public System.Data.Entity.DbSet<Movies.Models.Movie> Movies { get; set; }
     }
 }
