@@ -7,8 +7,12 @@
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+    background-color:#ffffff;
+    min-height:70%;
+    margin-bottom:0px;
+    border-radius:15px;
+    
 }
-
 /* Override the default bootstrap behavior where horizontal description lists 
    will truncate terms that are too long to fit in the left column 
 */
@@ -33,6 +37,9 @@
 .marginTop-100{
      margin-top:100px;
 }
+.marginTop-200{
+    margin-top:200px;
+}
 .imageStyle{
     margin-top:20px;
     margin-left:20px;
@@ -55,6 +62,12 @@
 }
 .redText{
     color:#ff0000;
+}
+body{
+    background-image:url(../Images/moviesBackground.jpg);
+    background-attachment:fixed;
+    background-repeat:no-repeat;
+    background-size:cover;
 }
 
 

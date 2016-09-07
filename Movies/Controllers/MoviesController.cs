@@ -142,7 +142,13 @@ namespace Movies.Controllers
 
             return View(movie);
         }
+        //GET: Movies/UserList
+        [Authorize(Roles = "Admin")]
+        public ActionResult UserList()
+        {
 
+            return View();
+        }
         // GET: Movies/Edit/5
         [Authorize(Roles = "Admin")]
         public ActionResult Edit(int? id)

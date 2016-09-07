@@ -304,6 +304,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Images\Covers\Troy.jpg" />
     <Content Include="Images\details.png" />
+    <Content Include="Images\moviesBackground.jpg" />
     <Content Include="Scripts\ai.0.22.9-build00167.js" />
     <Content Include="Scripts\ai.0.22.9-build00167.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -470,6 +471,7 @@
     <Content Include="Views\Movies\Index.cshtml" />
     <Content Include="Views\Movies\UserIndex.cshtml" />
     <Content Include="Views\Shared\_FavoritePartial.cshtml" />
+    <Content Include="Views\Movies\UserList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

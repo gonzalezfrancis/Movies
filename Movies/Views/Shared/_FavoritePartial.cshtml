@@ -3,6 +3,7 @@
 
 <table class="table">
     <tr>
+        <th></th>
         <th>
             @Html.DisplayNameFor(model => model.Title)
         </th>
@@ -26,7 +27,10 @@
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Title)
+                <img style="width:50px;height:70px" src="@Url.Action("GetImage", "Movies", new {id = item.MovieId})" />
+            </td>
+            <td>
+                <b>@Html.DisplayFor(modelItem => item.Title)</b>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Description)
@@ -39,12 +43,13 @@
             </td>
 
             <td>
-                @Html.DisplayFor(modelItem => item.Trailer)
+                <a class="videoPopUp fancybox.iframe" href="@string.Format("https://www.youtube.com/embed/{0}?autoplay=1", item.Trailer)"><span style="font-size:30px;" class="glyphicon glyphicon-film"></span></a>
             </td>
             <td>
-                @Html.ActionLink("Details", "Details", new { id = item.MovieId }) |
-                <span id="@item.MovieId" class="moviesItem">Delete</span>
-                @*@Ajax.ActionLink("Delete", "DeleteFavorites", new { movie = item.MovieId }, new AjaxOptions { HttpMethod = "GET", OnSuccess = "deleteSuccess()", OnFailure = "deleteUnsuccess()" })*@
+                @Html.ActionLink("Details", "Details", new { id = item.MovieId }) 
+                <br/><br/>
+                <a style="cursor:pointer;" id="@item.MovieId" class="moviesItem">Delete</a>
+                
             </td>
         </tr>
     }

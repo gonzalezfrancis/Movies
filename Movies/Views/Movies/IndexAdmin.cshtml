@@ -4,7 +4,7 @@
     ViewBag.Title = "IndexAdmin";
 }
 
-<h2>IndexAdmin</h2>
+<h2 class="text-center">Index Administrator</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -41,8 +41,8 @@
             @Html.DisplayFor(modelItem => item.Score)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.MovieId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.MovieId }) |
+            @Html.ActionLink("Edit", "Edit", new { id=item.MovieId }) 
+            @Html.ActionLink("Details", "Details", new { id=item.MovieId })
             @Html.ActionLink("Delete", "Delete", new { id=item.MovieId })
         </td>
     </tr>

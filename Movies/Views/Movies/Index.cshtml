@@ -19,21 +19,22 @@
         int count = 0;
             foreach (var item in Model)
             {
-                if (count % 4 == 0)
+                if (count % 6 == 0)
                 {
-                    @:<div class="row marginTop-50">
+                    @:<div class="row marginTop-50">   
+                    @:<div class="col-md-1"></div>
                 }
-                <div class="col-md-1"></div>
                 <div class="col-md-2">
-                    <p class="text-center textSize-200"><b>@item.Title</b></p>
-                    <img class="imageStyleIndex" src="@Url.Action("GetImage", "Movies", new { id = item.MovieId }) " /> <br/>
-                    <p class="text-center glyphiconSize"><a href="@Url.Action("Details", "Movies", new { id = item.MovieId }, null)" class=""><span class="glyphicon glyphicon-search"></span></a></p><br/>
+                    <p class="text-center"><b>@item.Title</b></p>
+                    <img class="imageStyleIndex" src="@Url.Action("GetImage", "Movies", new { id = item.MovieId }) " /> <br />
+                    <p class="text-center glyphiconSize"><a href="@Url.Action("Details", "Movies", new { id = item.MovieId }, null)" class=""><span class="glyphicon glyphicon-search"></span></a></p><br />
                     <p class="text-center glyphiconSize"><a class="videoPopUp fancybox.iframe" href="@string.Format("https://www.youtube.com/embed/{0}?autoplay=1", item.Trailer)"><span class="glyphicon glyphicon-film"></span></a></p>
-                    
+
                 </div>
                 count++;
-                if (count % 4 == 0)
+                if (count % 6 == 0)
                 {
+                    @:<div class="col-md-1"></div>
                     @:</div>
                 }
             }

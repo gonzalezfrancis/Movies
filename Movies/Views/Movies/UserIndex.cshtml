@@ -13,6 +13,18 @@
 @section scripts {
     <script>
         $(document).ready(function () {
+            //Trailer window
+            $(".videoPopUp").fancybox({
+                maxWidth: 800,
+                maxHeight: 600,
+                fitToView: false,
+                width: '70%',
+                height: '70%',
+                autoSize: false,
+                closeClick: false,
+                openEffect: 'none',
+                closeEffect: 'none'
+            });
             //Notice: Put selector inside the on to avoid stop firing after refresh partial view
             $(document).on('click', ".moviesItem", function (event) {
                 
