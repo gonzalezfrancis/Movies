@@ -27,7 +27,7 @@
         @*Add favorites*@
         @if(User.Identity.IsAuthenticated)
         {
-            <div class="row text-center"><a onclick="addFavorites()"><span class="glyphicon glyphicon-plus"></span>Add to Favorites</a></div>
+            <div class="row text-center" id="favoriteContainer"></div>
         }
         @*Genres*@
         <div class="row"><div class="col-md-1"><div class="col-md-2"><b>Genre:</b></div></div></div>
@@ -67,7 +67,8 @@
             @:window.Log = false;
         }
         $(document).ready(function () {
-         window.favorites;
+            window.currentMovie = '@Model.MovieId';
+            window.favorites;
             $(".videoPopUp").fancybox({
                 maxWidth: 800,
                 maxHeight: 600,
@@ -84,29 +85,46 @@
                 GetFavorites();
             }
             //Get list favorites movies
-            function GetFavorites() {
-                $.ajax({
-                    url: '@Url.Action("getFavorites", "Movies")',
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function (data) {
-                        window.favorites = JSON.parse(data);
-                        //TODO: Check if the movie is already in favorites
-                        
-                    }
-                });
-            }
+
 
         });
+        function GetFavorites() {
+            $.ajax({
+                url: '@Url.Action("getFavorites", "Movies")',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    window.favorites = JSON.parse(data);
+                    console.log(window.favorites);
+                    var flag = false;
+                    //Check id the current film is in user favorites
+                    for (var x = 0; x < window.favorites.length; x++) {
+                        if (window.currentMovie == window.favorites[x])
+                        {
+                            flag = true;                           
+                        }
+                    }
+                    //it is in favorite
+                    if (flag == true) {
+                        $("#favoriteContainer").empty();
+                        $("#favoriteContainer").append("<span style='color:red; font-size:20px;' class='glyphicon glyphicon-heart'></span> This movie is in your favorites");
+                    }
+                        //It is not in favorites
+                    else {
+                        $("#favoriteContainer").empty();
+                        $("#favoriteContainer").append("<a style='cursor:pointer;' onclick='addFavorites()'><span class='glyphicon glyphicon-plus'></span>Add to Favorites</a>");
+                    }
+                }
+            });
+        }
         function addFavorites() {
             var movie = '@Model.MovieId'
             $.ajax({
                 url: '@Url.Action("addFavorites", "Movies")',
                 data: { "movie": movie },
                 type: 'POST',
-                dataType: 'json',
                 success: function () {
-                    alert("Hola");
+                    GetFavorites();
                 }
             });
         }

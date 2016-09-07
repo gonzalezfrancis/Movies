@@ -13,30 +13,30 @@
 @section scripts {
     <script>
         $(document).ready(function () {
-            $(".moviesItem").on('click', function (event) {
-                var movieId = String(event.target.id) + " ";
-                alert(movieId);
+            //Notice: Put selector inside the on to avoid stop firing after refresh partial view
+            $(document).on('click', ".moviesItem", function (event) {
+                
+                var movieId = event.target.id;
+
                 $.ajax({
-                    url:'@Url.Action("DeleteFavorites", "Movies")',
+                    url: '@Url.Action("DeleteFavorites", "Movies")',
                     data: { "movie": movieId },
-                    type: 'POST',
-                    dataType: 'json',
+                    type: 'GET',
+                    dataType: 'html',
+                    cache: false,
                     success: function (data) {
-                        var parsed = JSON.parse(data);
-                        alert(parsed);
+                        //Update the favorite list
+                        $("#favorites").html(data);
+                        //Bootstrap alert
+                        bootstrap_alert("The movie has been delete Successfully");
+                    },
+                    error: function () {
+                        alert("An error has ocurred :(")
                     }
                 });
             });
         });
         
-        function deleteSuccess(result) {
-            //Bootstrap alert
-            bootstrap_alert("The movie has been delete Successfully");
-            
-        }
-        function deleteUnsuccess() {
-            alert("An error has occurrered!!");
-        }
         //Bootstrap alert
         bootstrap_alert = function (message) {
             $(".alertPlaceHolder").html("<div class='alert alert-warning alert-dismissible' role='alert'>" +

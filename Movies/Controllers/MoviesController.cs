@@ -271,14 +271,16 @@ namespace Movies.Controllers
         [Authorize]
         public JsonResult GetFavorites()
         {
-            List<Movie> favorites = new List<Movie>();
+            //List of favorites
+            List<int> favorites = new List<int>();
             //Check if the user is loged in
             if (User.Identity.IsAuthenticated)
             {
                 //Get all favorites movies from the user
                 string userId = User.Identity.GetUserId();
                 var user = db.Users.SingleOrDefault(u => u.Id == userId);
-                favorites = user.Movies.ToList();
+                //Select all movieId from the user favorites
+                favorites = user.Movies.Select(m => m.MovieId).ToList();
             }
             var json = JsonConvert.SerializeObject(favorites, Formatting.None,
                         new JsonSerializerSettings()
@@ -306,7 +308,6 @@ namespace Movies.Controllers
         public ActionResult DeleteFavorites(string movie)
         {
             int movieId = Int32.Parse(movie);
-            
             //Get the current user
             string userId = User.Identity.GetUserId();
             var user = db.Users.SingleOrDefault(u => u.Id == userId);
@@ -314,7 +315,7 @@ namespace Movies.Controllers
             var myMovie = db.Movies.SingleOrDefault(m => m.MovieId == movieId);
             user.Movies.Remove(myMovie);
             db.SaveChanges();
-            //TODO: check return type json format
+            //Return the partial view to update favorites
             return PartialView("_FavoritePartial", user.Movies.ToList());
         }
         protected override void Dispose(bool disposing)
