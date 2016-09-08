@@ -12,6 +12,7 @@ using Movies.Models;
 using PagedList;
 using Microsoft.AspNet.Identity;
 using PagedList.Mvc;
+using Microsoft.AspNet.Identity.EntityFramework;
 //using System.Web.Script.Serialization;
 
 namespace Movies.Controllers
@@ -146,9 +147,60 @@ namespace Movies.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult UserList()
         {
+            //View Model including Users and roles
+            UserRoleViewModel users = new UserRoleViewModel();
+            
+            //List of ApplicationUser
+            List<ApplicationUser> AppUsers = new List<ApplicationUser>();
+            //List of ApplicationUsers Including roles
+            List<ApplicationUserRole> AppUserRole = new List<ApplicationUserRole>();
+            AppUsers = db.Users.ToList();
 
-            return View();
+            foreach (var item in AppUsers)
+            {
+                string test = db.Roles.SingleOrDefault(r => r.Id == item.Id).ToString();
+            }
+            foreach (var item in AppUsers)
+            {
+                //Inherited class from ApplicationUser plus the user role
+                ApplicationUserRole userRole = new ApplicationUserRole
+                {
+                    Id = item.Id,
+                    Email = item.Email,
+                    EmailConfirmed = item.EmailConfirmed,
+                    AccessFailedCount = item.AccessFailedCount,
+                    UserName = item.UserName,
+                    role = db.Roles.SingleOrDefault(r => r.Id == item.Id).ToString()
+                };
+                AppUserRole.Add(userRole);
+            }
+            
+            
+
+
+            
+            users.Roles = db.Roles.ToList();
+
+        
+            
+            
+            
+            return View(users);
         }
+
+        //TODO: peding to get the role of each user
+        //public string GetUserRole(string id)
+        //{
+        //    ApplicationDbContext context = new ApplicationDbContext();
+        //    using (var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context)))
+        //    {
+        //        var rolesForUser = userManager.GetRolesAsync(id);
+        //        return rolesForUser.Result.;
+        //        // rolesForUser now has a list role classes.
+        //    }
+                
+            
+        //}
         // GET: Movies/Edit/5
         [Authorize(Roles = "Admin")]
         public ActionResult Edit(int? id)

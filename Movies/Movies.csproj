@@ -226,6 +226,7 @@
     <Compile Include="Models\Movie.cs" />
     <Compile Include="Models\QueryOptions.cs" />
     <Compile Include="Models\SortOrder.cs" />
+    <Compile Include="Models\UserRoleViewModel.cs" />
     <Compile Include="Models\WorkeGenreViewModels.cs" />
     <Compile Include="Models\Worker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

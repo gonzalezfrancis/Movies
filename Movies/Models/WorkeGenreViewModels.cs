@@ -6,8 +6,6 @@ using System.Web;
 
 namespace Movies.Models
 {
-   // [JsonObject]
-   // [Serializable]
     public class WorkeGenreViewModels
     {
         public List<Worker> WorkersCheck { get; set; } 
