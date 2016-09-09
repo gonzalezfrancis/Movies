@@ -13,6 +13,7 @@ using PagedList;
 using Microsoft.AspNet.Identity;
 using PagedList.Mvc;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
 //using System.Web.Script.Serialization;
 
 namespace Movies.Controllers
@@ -147,60 +148,53 @@ namespace Movies.Controllers
         [Authorize(Roles = "Admin")]
         public ActionResult UserList()
         {
-            //View Model including Users and roles
-            UserRoleViewModel users = new UserRoleViewModel();
+            //Get the List of users
+            List<ApplicationUser> users = db.Users.ToList();
+            //Create a List of User with the role for the view Model
+            List<UserRoleViewModel> userRoles = new List<UserRoleViewModel>();
+            //Get the role of the user using id
+            ApplicationUserManager UserManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
             
-            //List of ApplicationUser
-            List<ApplicationUser> AppUsers = new List<ApplicationUser>();
-            //List of ApplicationUsers Including roles
-            List<ApplicationUserRole> AppUserRole = new List<ApplicationUserRole>();
-            AppUsers = db.Users.ToList();
-
-            foreach (var item in AppUsers)
+            foreach (var item in users)
             {
-                string test = db.Roles.SingleOrDefault(r => r.Id == item.Id).ToString();
-            }
-            foreach (var item in AppUsers)
-            {
-                //Inherited class from ApplicationUser plus the user role
-                ApplicationUserRole userRole = new ApplicationUserRole
+                //Create a User with role and add it to the List
+                var userRole = new UserRoleViewModel
                 {
-                    Id = item.Id,
                     Email = item.Email,
                     EmailConfirmed = item.EmailConfirmed,
                     AccessFailedCount = item.AccessFailedCount,
                     UserName = item.UserName,
-                    role = db.Roles.SingleOrDefault(r => r.Id == item.Id).ToString()
+                    //Get the role for for the userId provided
+                    role = UserManager.GetRoles(item.Id),
                 };
-                AppUserRole.Add(userRole);
+                userRoles.Add(userRole);
             }
-            
-            
-
-
-            
-            users.Roles = db.Roles.ToList();
-
-        
-            
-            
-            
-            return View(users);
+            //Return the Users with the roles
+            return View(userRoles);
         }
-
-        //TODO: peding to get the role of each user
-        //public string GetUserRole(string id)
-        //{
-        //    ApplicationDbContext context = new ApplicationDbContext();
-        //    using (var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context)))
-        //    {
-        //        var rolesForUser = userManager.GetRolesAsync(id);
-        //        return rolesForUser.Result.;
-        //        // rolesForUser now has a list role classes.
-        //    }
-                
-            
-        //}
+        // POST: Change Users Role
+        public ActionResult AddRole(string id)
+        {
+            //Create a user manager
+            ApplicationUserManager UserManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            //Get the user
+            //var user = db.Users.Where(u => u.Id == id);
+            UserManager.AddToRole(id, "Admin");
+            return PartialView();
+        }
+        //POST: Remove role
+        public ActionResult RemoveRole(string id)
+        {
+            //Create a user manager
+            ApplicationUserManager UserManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            //Get the user
+            var user = db.Users.SingleOrDefault(u => u.Id == id);
+            if(user.Email != "gonzalezfrancis@hotmail.com")
+            {
+                UserManager.RemoveFromRole(id, "Admin");
+            }
+            return PartialView();
+        }
         // GET: Movies/Edit/5
         [Authorize(Roles = "Admin")]
         public ActionResult Edit(int? id)

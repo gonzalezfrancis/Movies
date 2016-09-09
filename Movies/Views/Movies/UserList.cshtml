@@ -1,90 +1,51 @@
-﻿@model Movies.Models.UserRoleViewModel
+﻿@model IEnumerable<Movies.Models.UserRoleViewModel>
 
 @{
     ViewBag.Title = "UserList";
 }
 
-<h2>UserList</h2>
+<h2>Users List</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    @*<tr>
-        <th>
-            @Html.DisplayNameFor(model => Model.Users.)
-            @Html.DisplayNameFor(model => model.Email)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EmailConfirmed)
-        </th>       
-        <th>
-            @Html.DisplayNameFor(model => model.AccessFailedCount)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UserName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Roles)
-        </th>
-    </tr>*@
 
-@foreach (var item in Model.Users) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EmailConfirmed)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.AccessFailedCount)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.UserName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-            @*@Html.DisplayFor(modelItem => item.Roles)*@
-            @*@Html.Action("GetUserRole", "Movies", new { id =  item.Id})*@
-        </td>
-    </tr>
-}
-@foreach(var item in Model.Roles)
-{
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayNameFor(modelItem => item.Users)
-        </td>
-        <td>
-            @Html.DisplayNameFor(modelItem => item.Id)
-        </td>
-    </tr>
-}
 
-</table>
-@section scripts{
+<div id="userList">
+    @Html.Partial("_UsersPartial", Model)
+</div>
+
+@section scripts {
     <script>
         $(document).ready(function () {
-            
-
-            
-        });
-        function getRoles() {
-            alert("hola");
-            $.ajax({
-                url: '@Url.Action("GetUserRole", "Movies")',
-                data: { "id": roles },
-                type: 'GET',
-                dataType: 'json',
-                success: function (json) {
-                    var role = JSON.parse(json);
-                    alert(role);
-                }
+            //////TODO: COrrect error on firing event
+            $(document).on('click', 'AddUser', function (event) {
+                alert("hola");
+                var userId = event.target.id;
+                $.ajax({
+                    url: '@Url.Action("AddRole", "Movies")',
+                    data: { "id": userId },
+                    type: 'GET',
+                    dataType: 'html',
+                    cache: false,
+                    success: function (data) {
+                        //Update user List
+                        $("#userList").html(data);
+                    }
+                });
             });
-        }
+            //Remove a user from role Admin
+            $(document).on('click', "RemoveUser", function (event) {
+                var userId = event.target.id;
+                $.ajax({
+                    url: '@Url.Action("RemoveRole", "Movies")',
+                    data: { "id": userId },
+                    type: 'GET',
+                    dataType: 'html',
+                    cache: false,
+                    success: function (data) {
+                        //Update the user List
+                        $("#userList").html(data);
+                    }
+                });
+            });
+        });       
     </script>    
 }

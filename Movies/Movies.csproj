@@ -473,6 +473,7 @@
     <Content Include="Views\Movies\UserIndex.cshtml" />
     <Content Include="Views\Shared\_FavoritePartial.cshtml" />
     <Content Include="Views\Movies\UserList.cshtml" />
+    <Content Include="Views\Shared\_UsersPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

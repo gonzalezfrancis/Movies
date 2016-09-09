@@ -1,0 +1,76 @@
+﻿@model IEnumerable<Movies.Models.UserRoleViewModel>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EmailConfirmed)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AccessFailedCount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.role)
+        </th>
+        
+        <th>Admin Role</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmailConfirmed)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AccessFailedCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.role)
+            </td>
+            <td class="text-center">
+                @{
+                    bool flag = false;
+                    foreach (var role in item.role)
+                    {
+                        if (role == "Admin")
+                        {
+                            flag = true;
+                        }
+                    }
+                    if (flag == true)
+                    {
+                        if (item.Email == "gonzalezfrancis@hotmail.com")
+                        {
+                            <span class="glyphicon glyphicon-ban-circle text-danger glyphiconSize"></span>
+                        }
+                        else
+                        {
+                            <a style="cursor:pointer;" class="RemoveUser" id="@item.Id">
+                                <span class="glyphicon glyphicon-minus text-dager glyphiconSize"></span>
+                            </a>
+                        }
+
+                    }
+                    else
+                    {
+                        <a style="cursor:pointer;" class="AddUser" id="@item.Id">
+                            <span class="glyphicon glyphicon-plus text-success glyphiconSize"></span>
+                        </a>
+                    }
+                }
+            </td>
+        </tr>
+    }
+</table>
