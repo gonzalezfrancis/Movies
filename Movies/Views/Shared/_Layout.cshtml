@@ -47,7 +47,10 @@
                                 <li><a href="@Url.Action("IndexAdmin", "Movies")">Index</a></li>
                                 <li><a href="@Url.Action("Create", "Movies")">Create</a></li>
                                 <li><a href="@Url.Action("Edit", "Movies")">Edit</a></li>
-                                <li><a href="@Url.Action("UserList", "Movies")">Users</a></li>
+                                @if(User.IsInRole("SuperAdmin"))
+                                { 
+                                    <li><a href="@Url.Action("UserList", "Movies")">Users</a></li>
+                                }
                             </ul>
                         </li>
                     }

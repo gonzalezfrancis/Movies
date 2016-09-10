@@ -14,6 +14,7 @@ using Microsoft.AspNet.Identity;
 using PagedList.Mvc;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
+using System.Threading.Tasks;
 //using System.Web.Script.Serialization;
 
 namespace Movies.Controllers
@@ -145,7 +146,7 @@ namespace Movies.Controllers
             return View(movie);
         }
         //GET: Movies/UserList
-        [Authorize(Roles = "Admin")]
+        [Authorize(Users = "gonzalezfrancis@hotmail.com")]
         public ActionResult UserList()
         {
             //Get the List of users
@@ -160,10 +161,12 @@ namespace Movies.Controllers
                 //Create a User with role and add it to the List
                 var userRole = new UserRoleViewModel
                 {
+                    Id = item.Id,
                     Email = item.Email,
                     EmailConfirmed = item.EmailConfirmed,
                     AccessFailedCount = item.AccessFailedCount,
-                    UserName = item.UserName,
+                    FirstName = item.FirstName,
+                    LastName = item.LastName,
                     //Get the role for for the userId provided
                     role = UserManager.GetRoles(item.Id),
                 };
@@ -173,17 +176,39 @@ namespace Movies.Controllers
             return View(userRoles);
         }
         // POST: Change Users Role
-        public ActionResult AddRole(string id)
+        public async Task<ActionResult> AddRole(string id)
         {
+            var context = new ApplicationDbContext();
             //Create a user manager
-            ApplicationUserManager UserManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            var UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
             //Get the user
-            //var user = db.Users.Where(u => u.Id == id);
-            UserManager.AddToRole(id, "Admin");
-            return PartialView();
+            //var user = db.Users.SingleOrDefault(u => u.Id == id);
+            await UserManager.AddToRoleAsync(id, "Admin");
+            //Get the List of users
+            List<ApplicationUser> users = db.Users.ToList();
+            //Create a List of User with the role for the view Model
+            List<UserRoleViewModel> userRoles = new List<UserRoleViewModel>();
+
+            foreach (var item in users)
+            {
+                //Create a User with role and add it to the List
+                var userRole = new UserRoleViewModel
+                {
+                    Id = item.Id,
+                    Email = item.Email,
+                    EmailConfirmed = item.EmailConfirmed,
+                    AccessFailedCount = item.AccessFailedCount,
+                    FirstName = item.FirstName,
+                    LastName = item.LastName,
+                    //Get the role for for the userId provided
+                    role = await UserManager.GetRolesAsync(item.Id),
+                };
+                userRoles.Add(userRole);
+            }
+            return PartialView("_UsersPartial", userRoles);
         }
         //POST: Remove role
-        public ActionResult RemoveRole(string id)
+        public async Task<ActionResult> RemoveRole(string id)
         {
             //Create a user manager
             ApplicationUserManager UserManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
@@ -191,9 +216,30 @@ namespace Movies.Controllers
             var user = db.Users.SingleOrDefault(u => u.Id == id);
             if(user.Email != "gonzalezfrancis@hotmail.com")
             {
-                UserManager.RemoveFromRole(id, "Admin");
+                await UserManager.RemoveFromRoleAsync(id, "Admin");
             }
-            return PartialView();
+            //Get the List of users
+            List<ApplicationUser> users = db.Users.ToList();
+            //Create a List of User with the role for the view Model
+            List<UserRoleViewModel> userRoles = new List<UserRoleViewModel>();
+
+            foreach (var item in users)
+            {
+                //Create a User with role and add it to the List
+                var userRole = new UserRoleViewModel
+                {
+                    Id = item.Id,
+                    Email = item.Email,
+                    EmailConfirmed = item.EmailConfirmed,
+                    AccessFailedCount = item.AccessFailedCount,
+                    FirstName = item.FirstName,
+                    LastName = item.LastName,
+                    //Get the role for for the userId provided
+                    role = await UserManager.GetRolesAsync(item.Id),
+                };
+                userRoles.Add(userRole);
+            }
+            return PartialView("_UsersPartial", userRoles);
         }
         // GET: Movies/Edit/5
         [Authorize(Roles = "Admin")]

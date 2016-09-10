@@ -157,12 +157,21 @@ namespace Movies.Controllers
 
             if (ModelState.IsValid)
             {
-                //Create the new role
-                var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
-                role.Name = "User";
-                roleUser.Create(role);
+                //Create the new role User
+                if(!roleUser.RoleExists("User"))
+                { 
+                    var role = new Microsoft.AspNet.Identity.EntityFramework.IdentityRole();
+                    role.Name = "User";
+                    await roleUser.CreateAsync(role);
+                }
 
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser
+                {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName
+                };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

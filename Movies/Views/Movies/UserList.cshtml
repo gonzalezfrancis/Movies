@@ -15,9 +15,9 @@
 @section scripts {
     <script>
         $(document).ready(function () {
-            //////TODO: COrrect error on firing event
-            $(document).on('click', 'AddUser', function (event) {
-                alert("hola");
+            //Use the selector as document when try to target a partial view
+            //Add user to admin role
+            $(document).on('click', '.AddUser', function (event) {
                 var userId = event.target.id;
                 $.ajax({
                     url: '@Url.Action("AddRole", "Movies")',
@@ -32,7 +32,7 @@
                 });
             });
             //Remove a user from role Admin
-            $(document).on('click', "RemoveUser", function (event) {
+            $(document).on('click', '.RemoveUser', function (event) {
                 var userId = event.target.id;
                 $.ajax({
                     url: '@Url.Action("RemoveRole", "Movies")',

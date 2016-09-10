@@ -3,6 +3,12 @@
 <table class="table">
     <tr>
         <th>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastName)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.Email)
         </th>
         <th>
@@ -10,9 +16,6 @@
         </th>
         <th>
             @Html.DisplayNameFor(model => model.AccessFailedCount)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UserName)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.role)
@@ -25,6 +28,12 @@
     {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
@@ -33,9 +42,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.AccessFailedCount)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserName)
-            </td>
+            
             <td>
                 @Html.DisplayFor(modelItem => item.role)
             </td>
@@ -57,16 +64,16 @@
                         }
                         else
                         {
-                            <a style="cursor:pointer;" class="RemoveUser" id="@item.Id">
-                                <span class="glyphicon glyphicon-minus text-dager glyphiconSize"></span>
+                            <a style="cursor:pointer;" class="RemoveUser">
+                                <span class="glyphicon glyphicon-minus redText glyphiconSize" id="@item.Id"></span>
                             </a>
                         }
 
                     }
                     else
                     {
-                        <a style="cursor:pointer;" class="AddUser" id="@item.Id">
-                            <span class="glyphicon glyphicon-plus text-success glyphiconSize"></span>
+                        <a style="cursor:pointer;" class="AddUser">
+                            <span class="glyphicon glyphicon-plus text-success glyphiconSize" id="@item.Id"></span>
                         </a>
                     }
                 }
