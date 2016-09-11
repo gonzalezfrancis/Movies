@@ -273,7 +273,38 @@ namespace Movies.Controllers
             }
             return View(movie);
         }
-
+        //Genres
+        //GET:
+        [Authorize(Roles = "Admin")]
+        public ActionResult EditGenre()
+        {
+            return View(db.Genres.ToList());
+        }
+        //Delete Genre
+        public async Task<ActionResult> DeleteGenre(int? id)
+        {
+            var genre = await db.Genres.SingleOrDefaultAsync(g => g.GenreId == id);
+            db.Genres.Remove(genre);
+            await db.SaveChangesAsync();
+            return PartialView("_genrePartial", db.Genres.ToList());
+        }
+        //Add genre and return partial view
+        public async Task<ActionResult> AddGenre(string genre)
+        {
+            Genre myGenre = new Genre { GenreName = genre };
+            db.Genres.Add(myGenre);
+            await db.SaveChangesAsync();
+            return PartialView("_genrePartial", db.Genres.ToList());
+        }
+        //Save an edited genre
+        public async Task<ActionResult> SaveEdit(string id, string value)
+        {
+            int myId = Int32.Parse(id);
+            Genre myGenre = await db.Genres.SingleOrDefaultAsync(g => g.GenreId == myId);
+            myGenre.GenreName = value;
+            await db.SaveChangesAsync();
+            return PartialView("_genrePartial", db.Genres.ToList());
+        }
         // GET: Movies/Delete/5
         [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)

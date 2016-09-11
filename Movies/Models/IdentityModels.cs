@@ -43,6 +43,6 @@ namespace Movies.Models
 
         public System.Data.Entity.DbSet<Movies.Models.Movie> Movies { get; set; }
 
-        
+        public System.Data.Entity.DbSet<Movies.Models.Genre> Genres { get; set; }
     }
 }

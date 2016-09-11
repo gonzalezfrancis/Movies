@@ -213,6 +213,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MoviesController.cs" />
+    <Compile Include="CustomHelpers\CustomHtmlHelpers.cs" />
     <Compile Include="DAL\MovieContext.cs" />
     <Compile Include="DAL\MovieInitializer.cs" />
     <Compile Include="Extensions\HtmlHelperExtension.cs" />
@@ -474,6 +475,8 @@
     <Content Include="Views\Shared\_FavoritePartial.cshtml" />
     <Content Include="Views\Movies\UserList.cshtml" />
     <Content Include="Views\Shared\_UsersPartial.cshtml" />
+    <Content Include="Views\Movies\EditGenre.cshtml" />
+    <Content Include="Views\Shared\_GenrePartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

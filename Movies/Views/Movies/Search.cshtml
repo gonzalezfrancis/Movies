@@ -1,5 +1,6 @@
 ﻿@using PagedList;
 @using PagedList.Mvc;
+
 @model IPagedList<Movies.Models.Movie>
 
 @Styles.Render("~/Content/moviesIndex")
@@ -87,117 +88,90 @@ if (Model.Count == 0)
 
     @*****************************************************************@
 
-    @section scripts {
-        <script>
-            @*$(document).ready(function () {
-            function ViewModel(Movies) {
-                var self = this;
+@section scripts {
+<script>
+           
+$(document).ready(function () {
+    var query;
+    $(".videoPopUp").fancybox({
+        maxWidth: 800,
+        maxHeight: 600,
+        fitToView: false,
+        width: '70%',
+        height: '70%',
+        autoSize: false,
+        closeClick: false,
+        openEffect: 'none',
+        closeEffect: 'none'
+    });
 
-                self.Movies = Movies;
-            };
-
-            var viewModel = new ViewModel(@Html.HtmlConvertToJson(Model));
-            ko.applyBindings(viewModel);
-        });*@
-
-            $(document).ready(function () {
-                var query;
-                $(".videoPopUp").fancybox({
-                    maxWidth: 800,
-                    maxHeight: 600,
-                    fitToView: false,
-                    width: '70%',
-                    height: '70%',
-                    autoSize: false,
-                    closeClick: false,
-                    openEffect: 'none',
-                    closeEffect: 'none'
-                });
-
-                //Autocomplete Search
-                $("#searchBox").keyup(function () {
-                   query = $(this).val();
-                });
-                //Press enter function in the search
-                $("#searchBox").keydown(function (event) {
-                    var keycode = (event.keyCode ? event.keyCode : event.which);
-                    if (keycode == '13') {
-                        var url = '@Url.Action("Search", "Movies")' + "?query=" + query;
-                        window.location.href = url;
-                    }
-                });
-                //Click the serach button
-                $("#searchButton").click(function () {
-                    var url = '@Url.Action("Search", "Movies")' + "?query=" + query;
-                    window.location.href = url;
-                });
-                $("#searchBox").autocomplete({
-                    source: function (request, response) {
-                        $.ajax({
-                            url: '@Url.Action("SearchAutoComplete", "Movies")',
-                            data: { "query": query },
-                            type: 'POST',
-                            dataType: 'json',
-                            success: function (data) {
-                                var parsed = JSON.parse(data);
-                                var myArray = [];
-                                for(var x = 0; x < parsed.length; x++){
-                                    var newObj = {
-                                        Title: parsed[x].Title,
-                                        MovieId: parsed[x].MovieId,
-                                        Cover: parsed[x].Cover,
-                                        ReleaseDate: parsed[x].ReleaseDate
-                                    };
-                                    myArray[x] = newObj;
-                                    //Limit the autocomplete to 5 results
-                                    if (x == 4) {
-                                        break;
-                                    }
-                                }
-                                response(myArray);
-                            },
-                            error: function (result) {
-                                var errorMsg = " Problem in processing your request !!";
-                                alert(errorMsg);
-                            }
-                        });
-                    },
-                    create: function (event, ui) {
-                        $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
-
-
-                            return $('<li style="width:500px;">')
-                                .append("<img style='height:150px;width:120px;margin-right:150px;' src='"+'@Url.Action("GetImage", "Movies")?id='+ item.MovieId+"'/>"+
-                                "<a href='" + '@Url.Action("Details", "Movies")?id=' + item.MovieId + "'><b>" + item.Title + "</b>(movie " + item.ReleaseDate + ")</a><br/>").append("<a>Show All</a>")
-                                
-                                .appendTo(ul);
-                            //"<a style='font-size:30px;' href='" + '@Url.Action("Search", "Movies")' + "?query=" + query + "'>Show All</a>"
+    //Autocomplete Search
+    $("#searchBox").keyup(function () {
+        query = $(this).val();
+    });
+    //Press enter function in the search
+    $("#searchBox").keydown(function (event) {
+        var keycode = (event.keyCode ? event.keyCode : event.which);
+        if (keycode == '13') {
+            var url = '@Url.Action("Search", "Movies")' + "?query=" + query;
+            window.location.href = url;
+        }
+    });
+    //Click the serach button
+    $("#searchButton").click(function () {
+        var url = '@Url.Action("Search", "Movies")' + "?query=" + query;
+        window.location.href = url;
+    });
+    $("#searchBox").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: '@Url.Action("SearchAutoComplete", "Movies")',
+                data: { "query": query },
+                type: 'POST',
+                dataType: 'json',
+                success: function (data) {
+                    var parsed = JSON.parse(data);
+                    var myArray = [];
+                    for(var x = 0; x < parsed.length; x++){
+                        var newObj = {
+                            Title: parsed[x].Title,
+                            MovieId: parsed[x].MovieId,
+                            Cover: parsed[x].Cover,
+                            ReleaseDate: parsed[x].ReleaseDate
                         };
-                    }
-                });
-                function getSearch(query) {
-                    @*var arrayTitle = [];
-                    var arrayId = [];
-                    $.ajax({
-                        url: '@Url.Action("search", "Movies")',
-                        data: { "query": query },
-                        type: 'POST',
-                        dataType: 'json',
-                        success: function (jsonObj) {
-                            var response = JSON.parse(jsonObj);
-
-                            for (var x = 0; x < response.length; x++) {
-                                arrayTitle[x] = response[x].Title;
-                                arrayId[x] = response[x].MovieId;
-                            }
+                        myArray[x] = newObj;
+                        //Limit the autocomplete to 5 results
+                        if (x == 4) {
+                            break;
                         }
-                    });
-                    $("#searchBox").autocomplete({
-                        source: arrayResponse.Title
-                    }).data('autocomplete')._renderItem = function();*@
-
-
+                    }
+                    response(myArray);
+                },
+                error: function (result) {
+                    var errorMsg = " Problem in processing your request !!";
+                    alert(errorMsg);
                 }
             });
-        </script>
-    }
+        },
+        create: function (event, ui) {
+            var counter = 0;
+            $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
+                    //TODO: add a show all link at the end of the list
+                    return $('<li style="width:500px;">')
+                        .append("<a href='" + '@Url.Action("Details", "Movies")?id=' + item.MovieId + "'><img style='height:100px;width:80px;margin-right:50px;' src='" + '@Url.Action("GetImage", "Movies")?id=' + item.MovieId + "'/>" +
+                        "<b>" + item.Title + "</b>(movie " + item.ReleaseDate + ")</a><br/>")
+                        .appendTo(ul);
+
+                    @*return $('<li style="width:500px;">')
+                    .append("<a href='" + '@Url.Action("Details", "Movies")?id=' + item.MovieId + "'><img style='height:150px;width:120px;margin-right:150px;' src='" + '@Url.Action("GetImage", "Movies")?id=' + item.MovieId + "'/>" +
+                    "<b>" + item.Title + "</b>(movie " + item.ReleaseDate + ")</a><br/>")
+                    .append("<a style='font-size:30px;' href='" + '@Url.Action("Search", "Movies")' + "?query=" + query + "'>Show All</a>")
+                    .appendTo(ul);*@
+
+
+            };
+        }
+    });
+});
+</script>
+}

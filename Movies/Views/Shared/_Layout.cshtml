@@ -46,7 +46,8 @@
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="@Url.Action("IndexAdmin", "Movies")">Index</a></li>
                                 <li><a href="@Url.Action("Create", "Movies")">Create</a></li>
-                                <li><a href="@Url.Action("Edit", "Movies")">Edit</a></li>
+                                <li><a href="@Url.Action("EditGenre", "Movies")">Edit Genre</a></li>
+                                <li><a href="@Url.Action("EditWorker", "Movies")">Edit Actors</a></li>
                                 @if(User.IsInRole("SuperAdmin"))
                                 { 
                                     <li><a href="@Url.Action("UserList", "Movies")">Users</a></li>
