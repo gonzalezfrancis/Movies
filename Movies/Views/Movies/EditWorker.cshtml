@@ -1,0 +1,95 @@
+﻿@model IEnumerable<Movies.Models.Worker>
+
+@{
+    ViewBag.Title = "EditWorker";
+}
+
+<h2>Edit Actors</h2>
+
+<div class="alertPlaceHolder"></div>
+<div class="row marginTop-50">
+    Select Actor by First Name start with Letter:
+</div>
+
+<div id="WorkerList">
+    @Html.Partial("_WorkerPartial", Model)
+</div>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            //Remove actor
+            $(document).on('click', '.deleteWorker', function (event) {
+                var workerId = event.target.name;
+                alert(workerId);
+            $(".alertPlaceHolder").empty();
+            if (confirm("Are you sure?")) {
+                $.ajax({
+                    url: '@Url.Action("DeleteWorker", "Movies")',
+                    data: { "id": workerId },
+                    type: 'GET',
+                    dataType: 'html',
+                    cache: false,
+                    success: function (data) {
+                        $("#WorkerList").html(data);
+                        //Open the alert box
+                        bootstrap_alert("warning", "The actor has been deleted successfully");
+                    },
+                    error: function () {
+                        bootstrap_alert("danger", "Ups an error has ocurred :( !!!!!");
+                    }
+                });
+            }
+            return false;
+            });
+            //Add a new Worker
+            $(document).on('click', '.addWorker', function (event) {
+                var firstName = $(".addFirstNameVal").val();
+                var lastName = $(".addLastNameVal").val();
+                $(".alertPlaceHolder").empty();
+                if (firstName != "" && lastName != "") {
+                    $.ajax({
+                        url: '@Url.Action("AddWorker", "Movies")',
+                        data: { "firstName": firstName, "lastName": lastName },
+                        type: 'GET',
+                        dataType: 'html',
+                        cache: false,
+                        success: function (data) {
+                            $("#WorkerList").html(data);
+                            //Open the alert box
+                            bootstrap_alert("success", "The new genre has been added successfully");
+                        },
+                        error: function () {
+                            bootstrap_alert("danger", "Ups an error has ocurred :( !!!!!");
+                        }
+                    });
+                }
+            });
+            //Order by letter
+            $(document).on('click', '.orderBy', function (event) {
+                var selection = event.target.id;
+                $.ajax({
+                    url: '@Url.Action("EditWorkerOrderBy", "Movies")',
+                    data: { "selector": selection },
+                    type: 'GET',
+                    dataType: 'html',
+                    cache: false,
+                    success: function(data){
+                        $("#WorkerList").html(data);
+                    },
+                    error: function () {
+                        bootstrap_alert("danger", "Ups an error has ocurred :( !!!!!");
+                    }
+
+                });
+            });
+
+            //Bootstrap alert
+            bootstrap_alert = function (type, message) {
+                $(".alertPlaceHolder").html("<div class='alert alert-" + type + " alert-dismissible' role='alert'>" +
+                                            "<button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>" +
+                                            "&times;</span><span class='sr-only'>Close</span></button><strong>" + message + "</strong></div>");
+            }
+        });
+    </script>    
+}
+

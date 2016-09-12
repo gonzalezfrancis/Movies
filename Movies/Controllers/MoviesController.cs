@@ -173,7 +173,7 @@ namespace Movies.Controllers
                 userRoles.Add(userRole);
             }
             //Return the Users with the roles
-            return View(userRoles);
+            return View(userRoles.OrderBy(u => u.FirstName).ToList());
         }
         // POST: Change Users Role
         public async Task<ActionResult> AddRole(string id)
@@ -205,7 +205,7 @@ namespace Movies.Controllers
                 };
                 userRoles.Add(userRole);
             }
-            return PartialView("_UsersPartial", userRoles);
+            return PartialView("_UsersPartial", userRoles.OrderBy(u => u.FirstName).ToList());
         }
         //POST: Remove role
         public async Task<ActionResult> RemoveRole(string id)
@@ -239,7 +239,7 @@ namespace Movies.Controllers
                 };
                 userRoles.Add(userRole);
             }
-            return PartialView("_UsersPartial", userRoles);
+            return PartialView("_UsersPartial", userRoles.OrderBy(u => u.FirstName).ToList());
         }
         // GET: Movies/Edit/5
         [Authorize(Roles = "Admin")]
@@ -273,37 +273,84 @@ namespace Movies.Controllers
             }
             return View(movie);
         }
-        //Genres
+        /////////Genres
         //GET:
         [Authorize(Roles = "Admin")]
-        public ActionResult EditGenre()
+        public async Task<ActionResult> EditGenre()
         {
-            return View(db.Genres.ToList());
+            return View(await db.Genres.OrderBy(g => g.GenreName).ToListAsync());
         }
         //Delete Genre
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteGenre(int? id)
         {
             var genre = await db.Genres.SingleOrDefaultAsync(g => g.GenreId == id);
             db.Genres.Remove(genre);
             await db.SaveChangesAsync();
-            return PartialView("_genrePartial", db.Genres.ToList());
+            return PartialView("_genrePartial", await db.Genres.OrderBy(g => g.GenreName).ToListAsync());
         }
         //Add genre and return partial view
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> AddGenre(string genre)
         {
             Genre myGenre = new Genre { GenreName = genre };
             db.Genres.Add(myGenre);
             await db.SaveChangesAsync();
-            return PartialView("_genrePartial", db.Genres.ToList());
+            return PartialView("_genrePartial", await db.Genres.OrderBy(g => g.GenreName).ToListAsync());
         }
         //Save an edited genre
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> SaveEdit(string id, string value)
         {
             int myId = Int32.Parse(id);
             Genre myGenre = await db.Genres.SingleOrDefaultAsync(g => g.GenreId == myId);
             myGenre.GenreName = value;
             await db.SaveChangesAsync();
-            return PartialView("_genrePartial", db.Genres.ToList());
+            return PartialView("_genrePartial", await db.Genres.OrderBy(g => g.GenreName).ToListAsync());
+        }
+        ///Edit Actors(Workers)
+        public async Task<ActionResult> EditWorker()
+        {
+            return View(await db.Workers.OrderBy(w => w.Name).ToListAsync());
+        }
+        //Delete worker
+        public async Task<ActionResult> DeleteWorker(int? id)
+        {
+            Worker myWorker = await db.Workers.SingleOrDefaultAsync(w => w.WorkerId == id);
+            db.Workers.Remove(myWorker);
+            await db.SaveChangesAsync();
+            return PartialView("_WorkerPartial", await db.Workers.OrderBy(w => w.Name).ToListAsync());
+        }
+        //Add worker
+        public async Task<ActionResult> AddWorker (string firstName, string lastName)
+        {
+            Worker myWorker = new Worker { Name = firstName, LastName = lastName };
+            db.Workers.Add(myWorker);
+            await db.SaveChangesAsync();
+            return PartialView("_WorkerPartial",await db.Workers.OrderBy(w => w.Name).ToListAsync());
+        }
+        public async Task<ActionResult> EditWorkerOrderBy (string selector)
+        {
+            switch(selector)
+            {
+                case "s2": return PartialView("_WorkerPartial", await db.Workers.Where(w => w.Name.StartsWith("D") || w.Name.StartsWith("E") || w.Name.StartsWith("F")).ToListAsync());
+
+                case "s3": return PartialView("_WorkerPartial", await db.Workers.Where(w => w.Name.StartsWith("G") || w.Name.StartsWith("H") || w.Name.StartsWith("I")).ToListAsync());
+
+                case "s4": return PartialView("_WorkerPartial", await db.Workers.Where(w => w.Name.StartsWith("J") || w.Name.StartsWith("K") || w.Name.StartsWith("L")).ToListAsync());
+
+                case "s5": return PartialView("_WorkerPartial", await db.Workers.Where(w => w.Name.StartsWith("M") || w.Name.StartsWith("N") || w.Name.StartsWith("O")).ToListAsync());
+
+                case "s6": return PartialView("_WorkerPartial", await db.Workers.Where(w => w.Name.StartsWith("P") || w.Name.StartsWith("Q") || w.Name.StartsWith("R")).ToListAsync());
+
+                case "s7": return PartialView("_WorkerPartial", await db.Workers.Where(w => w.Name.StartsWith("S") || w.Name.StartsWith("T") || w.Name.StartsWith("U")).ToListAsync());
+
+                case "s8": return PartialView("_WorkerPartial", await db.Workers.Where(w => w.Name.StartsWith("V") || w.Name.StartsWith("W") || w.Name.StartsWith("X")).ToListAsync());
+
+                case "s9": return PartialView("_WorkerPartial", await db.Workers.Where(w => w.Name.StartsWith("Y") || w.Name.StartsWith("Z") || w.Name.StartsWith("F")).ToListAsync());
+
+                default: return PartialView("_WorkerPartial", await db.Workers.Where(w => w.Name.StartsWith("A") || w.Name.StartsWith("B") || w.Name.StartsWith("C")).ToListAsync());
+            }
         }
         // GET: Movies/Delete/5
         [Authorize(Roles = "Admin")]

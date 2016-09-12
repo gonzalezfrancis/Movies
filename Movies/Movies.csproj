@@ -477,6 +477,8 @@
     <Content Include="Views\Shared\_UsersPartial.cshtml" />
     <Content Include="Views\Movies\EditGenre.cshtml" />
     <Content Include="Views\Shared\_GenrePartial.cshtml" />
+    <Content Include="Views\Movies\EditWorker.cshtml" />
+    <Content Include="Views\Shared\_WorkerPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -12,6 +12,7 @@
             //Delete Genre
             $(document).on('click', '.removeGenre', function (event) {
                 var genreId = event.target.name;
+                $(".alertPlaceHolder").empty();
                 if (confirm("Are you sure?")) {
                     $.ajax({
                         url: '@Url.Action("DeleteGenre", "Movies")',
@@ -22,7 +23,7 @@
                         success: function (data) {
                             $("#GenreList").html(data);
                             //Open the alert box
-                            bootstrap_alert("warning", "The new genre has been deleted successfully");
+                            bootstrap_alert("warning", "The genre has been deleted successfully");
                         },
                         error: function () {
                             bootstrap_alert("danger", "Ups an error has ocurred :( !!!!!");
@@ -34,6 +35,7 @@
             //Add a new Genre
             $(document).on('click', '.addGenre', function (event) {
                 var genre = $(".addGenreVal").val();
+                $(".alertPlaceHolder").empty();
                 if (genre != "") {
                     $.ajax({
                         url: '@Url.Action("AddGenre", "Movies")',
@@ -65,6 +67,7 @@
             $(document).on('click', '.saveButton', function (event) {
                 var genreId = event.target.name;
                 var value = $("#" + genreId + "").val();
+                $(".alertPlaceHolder").empty();
                 if (value != "") {
                     $.ajax({
                         url: '@Url.Action("SaveEdit", "Movies")',
