@@ -171,7 +171,10 @@
         //window.currentGenreListString;
         //window.currentWorkerListString;
         window.currentWorkerListId = [];
-        $(".datepicker").datepicker();
+        $(".datepicker").datepicker({
+            autoclose: true,
+            dateFormat: 'dd/mm/yy',
+        });
         $("#actorList").customselect();
         $("#genreList").customselect();
         //TODO:Chec for the trigger selctor

@@ -263,13 +263,23 @@ namespace Movies.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public ActionResult Edit([Bind(Include = "MovieId,Title,Description,ReleaseDate,Score,Cover,Trailer")] Movie movie)
+        public ActionResult Edit([Bind(Include = "MovieId,Title,Description,ReleaseDate,Score,Trailer")] Movie movie, HttpPostedFileBase upload)
         {
+            //This is the cover image
+            if (upload != null)
+            {
+                using (var reader = new System.IO.BinaryReader(upload.InputStream))
+                {
+                
+                    movie.Cover = reader.ReadBytes(upload.ContentLength);
+                }
+                
+            }
             if (ModelState.IsValid)
             {
                 db.Entry(movie).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("IndexAdmin");
             }
             return View(movie);
         }
@@ -347,10 +357,24 @@ namespace Movies.Controllers
 
                 case "s8": return PartialView("_WorkerPartial", await db.Workers.Where(w => w.Name.StartsWith("V") || w.Name.StartsWith("W") || w.Name.StartsWith("X")).ToListAsync());
 
-                case "s9": return PartialView("_WorkerPartial", await db.Workers.Where(w => w.Name.StartsWith("Y") || w.Name.StartsWith("Z") || w.Name.StartsWith("F")).ToListAsync());
+                case "s9": return PartialView("_WorkerPartial", await db.Workers.Where(w => w.Name.StartsWith("Y") || w.Name.StartsWith("Z")).ToListAsync());
+
+                case "s10": return PartialView("_WorkerPartial", await db.Workers.OrderBy(w => w.Name).ToListAsync());
+
+                case "s11": return PartialView("_WorkerPartial", await db.Workers.OrderBy(w => w.LastName).ToListAsync());
 
                 default: return PartialView("_WorkerPartial", await db.Workers.Where(w => w.Name.StartsWith("A") || w.Name.StartsWith("B") || w.Name.StartsWith("C")).ToListAsync());
             }
+        }
+        //GET: 
+        public async Task<ActionResult> SaveWorker(string id, string firstName, string lastName)
+        {
+            int intId = Int32.Parse(id);
+            Worker myWorker = await db.Workers.SingleOrDefaultAsync(w => w.WorkerId == intId);
+            myWorker.Name = firstName;
+            myWorker.LastName = lastName;
+            await db.SaveChangesAsync();
+            return PartialView("_WorkerPartial", await db.Workers.OrderBy(w => w.Name).ToListAsync());
         }
         // GET: Movies/Delete/5
         [Authorize(Roles = "Admin")]

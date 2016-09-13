@@ -44,13 +44,13 @@
                         <li class="dropdown">
                             <a href="@Url.Action("Movies", "Index", "Movie")" class="dropdown-toggle" data-toggle="dropdown">Administrator<span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="@Url.Action("IndexAdmin", "Movies")">Index</a></li>
-                                <li><a href="@Url.Action("Create", "Movies")">Create</a></li>
+                                <li><a href="@Url.Action("IndexAdmin", "Movies")">Movies List</a></li>
+                                <li><a href="@Url.Action("Create", "Movies")">Create new Movie</a></li>
                                 <li><a href="@Url.Action("EditGenre", "Movies")">Edit Genre</a></li>
                                 <li><a href="@Url.Action("EditWorker", "Movies")">Edit Actors</a></li>
                                 @if(User.IsInRole("SuperAdmin"))
                                 { 
-                                    <li><a href="@Url.Action("UserList", "Movies")">Users</a></li>
+                                    <li><a href="@Url.Action("UserList", "Movies")">Users List</a></li>
                                 }
                             </ul>
                         </li>

@@ -4,12 +4,9 @@
     ViewBag.Title = "EditWorker";
 }
 
-<h2>Edit Actors</h2>
+<h2 class="text-center">Edit Actors</h2>
 
 <div class="alertPlaceHolder"></div>
-<div class="row marginTop-50">
-    Select Actor by First Name start with Letter:
-</div>
 
 <div id="WorkerList">
     @Html.Partial("_WorkerPartial", Model)
@@ -20,7 +17,6 @@
             //Remove actor
             $(document).on('click', '.deleteWorker', function (event) {
                 var workerId = event.target.name;
-                alert(workerId);
             $(".alertPlaceHolder").empty();
             if (confirm("Are you sure?")) {
                 $.ajax({
@@ -56,7 +52,7 @@
                         success: function (data) {
                             $("#WorkerList").html(data);
                             //Open the alert box
-                            bootstrap_alert("success", "The new genre has been added successfully");
+                            bootstrap_alert("success", "The new actor has been added successfully");
                         },
                         error: function () {
                             bootstrap_alert("danger", "Ups an error has ocurred :( !!!!!");
@@ -82,7 +78,39 @@
 
                 });
             });
-
+            //Edit Worker
+            $(document).on('click', '.editWorker', function (event) {
+                var workerId = event.target.name;
+                var firstName = $("#FirstName_" + workerId + "").html();
+                var lastName = $("#LastName_" + workerId + "").html();
+                //Replace label by a text box
+                $("#FirstName_" + workerId + "").replaceWith("<input class='form-control' id='FirstName_" + workerId + "' value='" + firstName + "' />");
+                $("#LastName_" + workerId + "").replaceWith("<input class='form-control' id='LastName_" + workerId + "' value='" + lastName + "'/>");
+                $("#saveButton_" + workerId + "").append("<button type='button' name='" + workerId + "' id='button_" + workerId + "' class='btn btn-warning saveButton'>Save</button>");
+            });
+            //Save edit
+            $(document).on('click', '.saveButton', function (event) {
+                var workerId = event.target.name;
+                var firstName = $("#FirstName_" + workerId + "").val();
+                var lastName = $("#LastName_" + workerId + "").val();
+                $(".alertPlaceHolder").empty();
+                if (firstName != "" && lastName != "") {
+                    $.ajax({
+                        url: '@Url.Action("SaveWorker", "Movies")',
+                        data: { "id": workerId, "firstName": firstName, "lastName": lastName },
+                        type: 'GET',
+                        dataType: 'html',
+                        cache: false,
+                        success: function (data) {
+                            $("#WorkerList").html(data);
+                            bootstrap_alert("success", "The actor has been edited successfully");
+                        },
+                        error: function () {
+                            bootstrap_alert("danger", "Ups an error has ocurred :-( !!!!");
+                        }
+                    });
+                }
+            });
             //Bootstrap alert
             bootstrap_alert = function (type, message) {
                 $(".alertPlaceHolder").html("<div class='alert alert-" + type + " alert-dismissible' role='alert'>" +
