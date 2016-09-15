@@ -24,10 +24,24 @@ namespace Movies.Controllers
         private MovieContext db = new MovieContext();
 
         // GET: Movies
-        public ActionResult Index()
+        public ActionResult Index(int? selector)
         {
-            //If the page paramet is == null then use 1, second parameter is the page size
-            return View(db.Movies.OrderByDescending(i => i.Score).Take(16).ToList());
+            DateTime now = DateTime.Now;
+            switch(selector)
+            {
+                case 2: ViewBag.Title = "Latest Releases";
+                    return View(db.Movies.Where(m => m.ReleaseDate <= now).Take(20).OrderByDescending(s => s.ReleaseDate).ToList());
+
+                case 3:
+                    ViewBag.Title = "Coming Soon";
+                    return View(db.Movies.Where(m => m.ReleaseDate > now).Take(20).OrderByDescending(r => r.ReleaseDate).ToList());
+
+                //If the page paramet is == null then use 1, second parameter is the page size
+                default: ViewBag.Title = "Most Popular";
+                    return View(db.Movies.OrderByDescending(i => i.Score).Take(20).ToList());
+            }
+            
+            
         }
 
         //GET: Movies/Search
@@ -114,7 +128,7 @@ namespace Movies.Controllers
         {
             List<Genre> myGenre = new List<Genre>();
             List<Worker> myWorker = new List<Worker>();
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && upload != null)
             {
                 //This is the cover image
                 using (var reader = new System.IO.BinaryReader(upload.InputStream))
@@ -140,7 +154,7 @@ namespace Movies.Controllers
                 movie.Workers = myWorker; 
                 db.Movies.Add(movie);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("IndexAdmin");
             }
 
             return View(movie);
@@ -263,22 +277,60 @@ namespace Movies.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public ActionResult Edit([Bind(Include = "MovieId,Title,Description,ReleaseDate,Score,Trailer")] Movie movie, HttpPostedFileBase upload)
+        public async Task<ActionResult> Edit([Bind(Include = "MovieId,Title,Description,ReleaseDate,Score,Trailer")] Movie movie, HttpPostedFileBase upload, string genreString, string workerString)
         {
+            //Load the Genres for the movie very important in many to many relationship with the birdge table
+            db.Movies.Attach(movie);
+            await db.Entry(movie).Collection(g => g.Genres).LoadAsync();
+            await db.Entry(movie).Collection(w => w.Workers).LoadAsync();
+            
+            //This are the keys for the Genres converted to int array
+            if(genreString != null)
+            {
+                int[] genreArray = Array.ConvertAll(genreString.Split(','), g => int.Parse(g));
+                movie.Genres.Clear();
+                foreach (var item in genreArray)
+                {
+                    Genre myGenre = await db.Genres.SingleAsync(g => g.GenreId == item);
+                    if (myGenre != null)
+                    {
+                        movie.Genres.Add(myGenre);
+                    }
+                }
+            }
+            if(workerString != null)
+            {
+                //This are the keys for the Genres converted to int array
+                int[] workerArray = Array.ConvertAll(workerString.Split(','), w => int.Parse(w));
+
+                movie.Workers.Clear();
+
+                foreach (var item in workerArray)
+                {
+                    Worker myWorker = await db.Workers.SingleAsync(w => w.WorkerId == item);
+                    if (myWorker != null)
+                    {
+                        movie.Workers.Add(myWorker);
+                    }
+                }
+            }
             //This is the cover image
             if (upload != null)
             {
                 using (var reader = new System.IO.BinaryReader(upload.InputStream))
                 {
-                
                     movie.Cover = reader.ReadBytes(upload.ContentLength);
                 }
-                
+            }
+            else if (upload == null)
+            {
+                movie.Cover = await db.Movies.Where(m => m.MovieId == movie.MovieId).Select(e => e.Cover).SingleAsync();
             }
             if (ModelState.IsValid)
-            {
+            {    
                 db.Entry(movie).State = EntityState.Modified;
-                db.SaveChanges();
+                await db.SaveChangesAsync();
+                
                 return RedirectToAction("IndexAdmin");
             }
             return View(movie);
@@ -401,16 +453,24 @@ namespace Movies.Controllers
             Movie movie = db.Movies.Find(id);
             db.Movies.Remove(movie);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("IndexAdmin");
         }
 
-        public JsonResult getWorkersGenre()
+        public async Task<JsonResult> getWorkersGenre(int? id)
         {
-            var workerGenre = new WorkeGenreViewModels
+            //Check if requesting specific movie or the complete List
+            var workerGenre = new WorkeGenreViewModels();
+            if(id != null)
             {
-                WorkersCheck = db.Workers.ToList(),
-                GenreCheck = db.Genres.ToList()
-            };
+                Movie myMovie = await db.Movies.SingleOrDefaultAsync(w => w.MovieId == id);
+                workerGenre.WorkersCheck = myMovie.Workers.OrderBy(g => g.Name).ToList();
+                workerGenre.GenreCheck = myMovie.Genres.OrderBy(g => g.GenreName).ToList();
+            }
+            else
+            {
+                workerGenre.WorkersCheck = await db.Workers.ToListAsync();
+                workerGenre.GenreCheck = await db.Genres.OrderBy(g => g.GenreName).ToListAsync();
+            }
             //Choose to ignore the Looping reference Many to many while serialing the object into Json format
             //Also specified with attribute [JsonIgnore] in the many to many tables
             var json = JsonConvert.SerializeObject(workerGenre, Formatting.None,
@@ -418,11 +478,10 @@ namespace Movies.Controllers
                         {
                             ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                         });
-            
             //Add allowget for security 
             return Json(json, JsonRequestBehavior.AllowGet);
         }
-
+        
         //GET: Movies/GetImage Image from the databse
         public ActionResult GetImage(int id)
         {

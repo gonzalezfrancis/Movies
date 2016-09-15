@@ -26,17 +26,18 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Movie", "Index", "Movies")</li>
+                    <li class="dropdown">
+                        <a href="@Url.Action("Movies", "Index", "Movie")" class="dropdown-toggle" data-toggle="dropdown">Movies<span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="@Url.Action("Index", "Movies")">Most Popular</a></li>
+                            <li><a href="@Url.Action("Index", "Movies")?selector=2">Latest Releases</a></li>
+                            <li><a href="@Url.Action("Index", "Movies")?selector=3">Coming soon</a></li>
+                        </ul>
+                    </li>
+                    @*<li>@Html.ActionLink("Movie", "Index", "Movies")</li>*@
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <li class="dropdown">
-                            <a href="@Url.Action("Movies", "Index", "Movie")" class="dropdown-toggle" data-toggle="dropdown">Your Account<span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="@Url.Action("UserIndex", "Movies")">Favorites</a></li>
-                                <li><a href="@Url.Action("UserIndex", "Movies")">Account Details</a></li>
-                                @*<li><a href="#">Building</a></li>*@
-                            </ul>
-                        </li>
+                        <li><a href="@Url.Action("UserIndex", "Movies")"><span class="text-danger glyphicon glyphicon-heart"></span> Your Favorites</a></li>
                     }
                     @*Admin Menu*@
                     @if (User.IsInRole("Admin"))

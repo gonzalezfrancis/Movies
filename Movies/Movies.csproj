@@ -306,6 +306,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Images\Covers\Troy.jpg" />
     <Content Include="Images\details.png" />
+    <Content Include="Images\loading.gif" />
     <Content Include="Images\moviesBackground.jpg" />
     <Content Include="Scripts\ai.0.22.9-build00167.js" />
     <Content Include="Scripts\ai.0.22.9-build00167.min.js" />

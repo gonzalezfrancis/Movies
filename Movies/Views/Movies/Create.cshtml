@@ -27,7 +27,7 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.TextAreaFor(model => model.Description, htmlAttributes: new { @class = "form-control" })
                         @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -177,7 +177,7 @@
         });
         $("#actorList").customselect();
         $("#genreList").customselect();
-        //TODO:Chec for the trigger selctor
+        //TODO:Chec for the trigger selector
         
         getWorkersList();
 
@@ -192,6 +192,7 @@
     //Add a new actor to the cureent movie
     function addWorker() {
         var element = $("#actorList").val();
+        
         var flag = false;
         //check if a genre is selected
         if (element != "") {
@@ -362,7 +363,7 @@
             }
         }
     }
-    //Get requesto to get and update the worker (actors) List
+    //Get reques to to get and update the worker (actors) List
     function getWorkersList(){
         var actionUrl = '@Url.Action("getWorkersGenre", "Movies")';
         $.getJSON(actionUrl, updateWorGenList);

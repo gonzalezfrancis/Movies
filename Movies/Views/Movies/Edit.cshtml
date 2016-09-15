@@ -5,6 +5,7 @@
 }
 
 <h2 class="text-center">Edit Movie</h2>
+<div class="alertPlaceHolder"></div>
 <div class="row">
     <div class="col-md-6">
         @using (Html.BeginForm("Edit", "Movies", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
@@ -28,7 +29,7 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.TextAreaFor(model => model.Description, htmlAttributes: new { @class = "form-control" })
                         @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -63,8 +64,11 @@
                         @Html.ValidationMessageFor(model => model.Trailer, "", new { @class = "text-danger" })
                     </div>
                 </div>
-
-                <div class="form-group">
+                @*Hidden field to store the genres*@
+                <input type="hidden" id="genreString" name="genreString" />
+                @*Hidden field to store the genres*@
+                <input type="hidden" id="workerString" name="workerString" />
+                <div class="form-group marginTop-100">
                     <div class="col-md-offset-2 col-md-10">
                         <input type="submit" value="Save" class="btn btn-warning" />
                     </div>
@@ -75,11 +79,32 @@
     @*Column for Genre and Actors*@
     <div class="col-md-6">
         <div class="row">
+            @*Genres*@
             <h3 class="text-center">Genres List</h3>
-
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div id="currentGenreContainer" class="col-md-8 editGenreContainer"></div>
+                <div class="col-md-2"></div>
+            </div>
+            <div class="row marginTop-50">
+                <div class="col-md-2"></div>
+                <div id="genreListContainer" class="col-md-7"></div>
+                <div class="col-md-3" id="genreButton"></div>
+            </div>
         </div>
+        @*Actors*@
         <div class="row marginTop-50">
             <h3 class="text-center">Actors List</h3>
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8 editActorContainer" id="curentWorkerContainer"></div>
+                <div class="col-md-2"></div>
+            </div>
+            <div class="row marginTop-50 marginBott-100">
+                <div class="col-md-2"></div>
+                <div id="actorListContainer" class="col-md-7"></div>
+                <div class="col-md-3" id="actorButton"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -89,10 +114,194 @@
 @section scripts{
     <script>
         $(document).ready(function () {
+            //Complete worker Genre List
+            window.workerGenreList;
+            //List worker Genre list for the current movie
+            window.currentWorkerGenreList;
+            //Date picker
             $(".datePicker").datepicker({
                 autoclose: true,
                 dateFormat: 'dd/mm/yy',
             });
+
+            //Get the complete List
+            $.ajax({
+                url: '@Url.Action("getWorkersGenre", "Movies")',
+                type: 'GET',
+                dataType: 'json',
+                beforeSend: function(){
+                    $("#currentGenreContainer").append("<img style='width:200px;height:200px;margin:0px 0px 50px 100px;' id='genreLoading' src='/Images/loading.gif'/>");
+                    $("#curentWorkerContainer").append("<img style='width:200px;height:200px;margin:0px 0px 50px 100px;' id='genreLoading' src='/Images/loading.gif'/>");
+                },
+                success: function (data) {
+                    window.workerGenreList = JSON.parse(data);
+                    updateWorkerGenreList();
+                },
+                error: function () {
+                    bootstrap_alert("danger", "Ups an error has ocurred :( !!!!!");
+                }
+            });
+            //Get the List for the current Movie
+            $.ajax({
+                url: '@Url.Action("getWorkersGenre", "Movies")',
+                data: {"id": '@Model.MovieId' },
+                type: 'GET',
+                dataType: 'json',
+                beforeSend: function(){
+                    
+                },
+                success: function (data) {
+                    $("#genreLoading").remove();
+                    window.currentWorkerGenreList = JSON.parse(data);
+                    //Print the genre List
+                    curGenreList();
+                    curWorkerList();
+                },
+                error: function () {
+                    bootstrap_alert("danger", "Ups an error has ocurred :( !!!!!");
+                }
+            });
+            //Remove genre button
+            $(document).on('click', '.removeGenre', function (event) {
+                var genreId = event.target.value;
+                var index;
+                for (var x = 0; x < window.currentWorkerGenreList.GenreCheck.length; x++) {
+                    if (window.currentWorkerGenreList.GenreCheck[x].GenreId == genreId) {
+                        index = x;
+                    }
+                }
+                if (index != null) {
+                    window.currentWorkerGenreList.GenreCheck.splice(index, 1);
+                    curGenreList();
+                }
+            });
+            //Add Genre button
+            $(document).on('click', '.addGenre', function (event) {
+                $(".alertPlaceHolder").empty();
+                var genreId = $("#genreList").val();
+                var flag = false;
+                for (var x = 0; x < window.currentWorkerGenreList.GenreCheck.length; x++) {
+                    if (window.currentWorkerGenreList.GenreCheck[x].GenreId == genreId) {
+                        flag = true;
+                    }
+                }
+                if (genreId != "" && flag == false) {
+                    for (var x = 0; x < window.workerGenreList.GenreCheck.length; x++) {
+                        if (window.workerGenreList.GenreCheck[x].GenreId == genreId) {
+                            
+                            var myGenre = {
+                                GenreId: window.workerGenreList.GenreCheck[x].GenreId,
+                                GenreName:window.workerGenreList.GenreCheck[x].GenreName
+                            }
+                            window.currentWorkerGenreList.GenreCheck.push(myGenre);
+                            curGenreList();
+                        }
+                    }
+                }
+                if (flag == true) {
+                    bootstrap_alert("danger", "This Genre is already in this Movie");
+                }
+            });
         });
+        //Remove Actor button
+        $(document).on('click', '.removeWorker', function (event) {
+            var workerId = event.target.value;
+            var index;
+            for (var x = 0; x < window.currentWorkerGenreList.WorkersCheck.length; x++) {
+                if (window.currentWorkerGenreList.WorkersCheck[x].WorkerId == workerId) {
+                    index = x;
+                }
+            }
+            if (index != null) {
+                window.currentWorkerGenreList.WorkersCheck.splice(index, 1);
+                curWorkerList();
+            }
+        });
+        //Add Actor button
+        $(document).on('click', '.addActor', function (event) {
+            $(".alertPlaceHolder").empty();
+            var workerId = $("#actorList").val();
+            var flag = false;
+            for (var x = 0; x < window.currentWorkerGenreList.WorkersCheck.length; x++) {
+                if (window.currentWorkerGenreList.WorkersCheck[x].WorkerId == workerId) {
+                    flag = true;
+                }
+            }
+            if (workerId != "" && flag == false) {
+                for (var x = 0; x < window.workerGenreList.WorkersCheck.length; x++) {
+                    if (window.workerGenreList.WorkersCheck[x].WorkerId == workerId) {
+
+                        var myWorker = {
+                            WorkerId: window.workerGenreList.WorkersCheck[x].WorkerId,
+                            Name: window.workerGenreList.WorkersCheck[x].Name,
+                            LastName: window.workerGenreList.WorkersCheck[x].LastName
+                        }
+                        window.currentWorkerGenreList.WorkersCheck.push(myWorker);
+                        curWorkerList();
+                    }
+                }
+            }
+            if (flag == true) {
+                bootstrap_alert("danger", "This Actor is already in this Movie");
+            }
+        });
+        //Populate the custom select with the complete List of Genre and Actors
+        function updateWorkerGenreList() {
+            //Adding the update List of Genres
+            $("#genreListContainer").empty();
+            $("#genreListContainer").append("<select id='genreList' name='standard' class='custom-select'>");
+            $("#genreList").append("<option value=''>Please Select Genres</option>"); 
+            for (var x = 0; x < window.workerGenreList.GenreCheck.length; x++) { 
+                $("#genreList").append("<option value=" + window.workerGenreList.GenreCheck[x].GenreId + ">" + window.workerGenreList.GenreCheck[x].GenreName + "</option>");
+            }
+            $("#genreList").append("</select>");
+            $("#genreButton").append("<button class='addGenre btn btn-success'>Add Genre</button>");
+            $("#genreList").customselect();
+            //Adding the update list of Actors
+            $("#actorListContainer").empty();
+            $("#actorListContainer").append("<select id='actorList' name='standard' class='custom-select'>");
+            $("#actorList").append("<option value=''>Please Select Actors</option>");
+            for (var x = 0; x < window.workerGenreList.WorkersCheck.length; x++) {
+                $("#actorList").append("<option value=" + window.workerGenreList.WorkersCheck[x].WorkerId + ">" + window.workerGenreList.WorkersCheck[x].Name + " " + window.workerGenreList.WorkersCheck[x].LastName + "</option>");
+            }
+            $("#actorList").append("</select>");
+            $("#actorButton").append("<button class='addActor btn btn-success'>Add Actor</button>");
+            $("#actorList").customselect();
+        }
+        //Print the current genres for the movie selected
+        function curGenreList() {
+            $("#currentGenreContainer").empty();
+            var stringIds = new Array();
+            //Genre List
+            for (var x = 0; x < window.currentWorkerGenreList.GenreCheck.length; x++) {
+                $("#currentGenreContainer").append("<div class='row marginTop-20'><div class='col-md-8' value='"+ window.currentWorkerGenreList.GenreCheck[x].GenreId +"'>"+
+                    window.currentWorkerGenreList.GenreCheck[x].GenreName + "</div><div class='col-md-1'></div><button type='button' class='removeGenre btn btn-danger' value='" + window.currentWorkerGenreList.GenreCheck[x].GenreId + "'>Remove</button></div>");
+                //Copy the ids in the list into an string
+                stringIds.push(window.currentWorkerGenreList.GenreCheck[x].GenreId);
+            }
+            //Update the values for the hidden field
+            $("#genreString").val("");
+            $("#genreString").val(stringIds.toString());
+        }
+        //Print the current actors for the movie selected
+        function curWorkerList() {
+            $("#curentWorkerContainer").empty();
+            var stringIds = new Array();
+            for (var x = 0; x < window.currentWorkerGenreList.WorkersCheck.length; x++) {
+                $("#curentWorkerContainer").append("<div class='row marginTop-20'><div class='col-md-8 value='" + window.currentWorkerGenreList.WorkersCheck[x].WorkerId + "'>" +
+                    window.currentWorkerGenreList.WorkersCheck[x].Name + " " + window.currentWorkerGenreList.WorkersCheck[x].LastName + "</div><div class='col-md-1'></div><button type='button' class='removeWorker btn btn-danger' value='" +
+                    window.currentWorkerGenreList.WorkersCheck[x].WorkerId + "'>Remove</button></div>");
+                stringIds.push(window.currentWorkerGenreList.WorkersCheck[x].WorkerId);
+            }
+            //Update the values for the hidden field
+            $("#workerString").val("");
+            $("#workerString").val(stringIds.toString());
+        }
+        //Bootstrap alert
+        bootstrap_alert = function (type, message) {
+            $(".alertPlaceHolder").html("<div class='alert alert-" + type + " alert-dismissible' role='alert'>" +
+                                        "<button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>" +
+                                        "&times;</span><span class='sr-only'>Close</span></button><strong>" + message + "</strong></div>");
+        }
     </script>    
 }
