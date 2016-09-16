@@ -55,10 +55,7 @@
 .glyphiconSize{
     font-size:30px;
 }
-.imageStyleIndex{
-    height:270px;
-    width:100%;
-}
+
 .redText{
     color:#ff0000;
 }
@@ -82,6 +79,41 @@ body{
     height:200px;
     overflow-y:auto;
     overflow-x:hidden;
+}
+/*Index Movies Controller*/
+.insideMovie{
+    height:240px;
+    width:80%;
+    visibility:hidden;
+    text-align:center;
+}
+.indexTitle{
+    height:60px;
+    margin-top:5px;
+}
+.imageStyleIndex{
+    height:240px;
+    width:80%;
+    z-index:1;
+    position:absolute;
+}
+.movieContainer:hover .insideMovie{
+    background-image:url(../Images/opacybackground.png);
+    visibility:visible;
+    position:absolute;
+    width:80%;
+    z-index:2;
+}
+.movieButton{
+    text-align:center;
+    width:100px;
+    margin:30px auto 0 auto;
+}
+.movieContainer:hover .imageStyleIndex{
+    /*z-index:-1;*/
+}
+.movieContainer{
+    height:240px;
 }
 /*Autocomplete box*/
 .ui-state-active,

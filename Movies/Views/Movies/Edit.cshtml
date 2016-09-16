@@ -37,7 +37,8 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.ReleaseDate, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.ReleaseDate, new { htmlAttributes = new { @class = "datePicker" } })
+                        <input type="text" id="datePicker" name="ReleaseDate" value="@Model.ReleaseDate"/>
+                        @*@Html.EditorFor(model => model.ReleaseDate, new { htmlAttributes = new { id = "datePicker"} })*@
                         @Html.ValidationMessageFor(model => model.ReleaseDate, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -119,11 +120,10 @@
             //List worker Genre list for the current movie
             window.currentWorkerGenreList;
             //Date picker
-            $(".datePicker").datepicker({
+            $("#datePicker").datepicker({
                 autoclose: true,
                 dateFormat: 'dd/mm/yy',
             });
-
             //Get the complete List
             $.ajax({
                 url: '@Url.Action("getWorkersGenre", "Movies")',
@@ -148,7 +148,7 @@
                 type: 'GET',
                 dataType: 'json',
                 beforeSend: function(){
-                    
+
                 },
                 success: function (data) {
                     $("#genreLoading").remove();
@@ -188,7 +188,7 @@
                 if (genreId != "" && flag == false) {
                     for (var x = 0; x < window.workerGenreList.GenreCheck.length; x++) {
                         if (window.workerGenreList.GenreCheck[x].GenreId == genreId) {
-                            
+
                             var myGenre = {
                                 GenreId: window.workerGenreList.GenreCheck[x].GenreId,
                                 GenreName:window.workerGenreList.GenreCheck[x].GenreName
@@ -250,8 +250,8 @@
             //Adding the update List of Genres
             $("#genreListContainer").empty();
             $("#genreListContainer").append("<select id='genreList' name='standard' class='custom-select'>");
-            $("#genreList").append("<option value=''>Please Select Genres</option>"); 
-            for (var x = 0; x < window.workerGenreList.GenreCheck.length; x++) { 
+            $("#genreList").append("<option value=''>Please Select Genres</option>");
+            for (var x = 0; x < window.workerGenreList.GenreCheck.length; x++) {
                 $("#genreList").append("<option value=" + window.workerGenreList.GenreCheck[x].GenreId + ">" + window.workerGenreList.GenreCheck[x].GenreName + "</option>");
             }
             $("#genreList").append("</select>");

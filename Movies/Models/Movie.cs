@@ -24,6 +24,7 @@ namespace Movies.Models
 
         public string Description { get; set; }
 
+        [DataType(DataType.Date),DisplayFormat(DataFormatString="{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime  ReleaseDate { get; set; }
 
         public decimal Score { get; set; }

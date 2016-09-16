@@ -20,12 +20,15 @@
                     @:<div class="row marginTop-50">   
                     @:<div class="col-md-1"></div>
                 }
-                <div class="col-md-2">
-                    <p class="text-center"><b>@item.Title</b></p>
-                    <img class="imageStyleIndex" src="@Url.Action("GetImage", "Movies", new { id = item.MovieId }) " /> <br />
-                    <p class="text-center glyphiconSize"><a href="@Url.Action("Details", "Movies", new { id = item.MovieId }, null)" class=""><span class="glyphicon glyphicon-search"></span></a></p><br />
-                    <p class="text-center glyphiconSize"><a class="videoPopUp fancybox.iframe" href="@string.Format("https://www.youtube.com/embed/{0}?autoplay=1", item.Trailer)"><span class="glyphicon glyphicon-film"></span></a></p>
-
+                <div class="col-md-2" style="height:300px;">
+                    <div class="movieContainer">
+                        <img class="imageStyleIndex" src="@Url.Action("GetImage", "Movies", new { id = item.MovieId }) " />
+                        <div class="insideMovie">
+                            <a class="btn btn-primary movieButton" href="@Url.Action("Details", "Movies", new { id = item.MovieId }, null)">Details <span class="glyphicon glyphicon-search"></span></a><br />
+                            <a class="btn btn-primary videoPopUp fancybox.iframe movieButton" href="@string.Format("https://www.youtube.com/embed/{0}?autoplay=1", item.Trailer)">Trailer <span class="glyphicon glyphicon-film"></span></a>
+                        </div>
+                    </div>
+                    <p class="text-center indexTitle"><b>@item.Title</b></p>
                 </div>
                 count++;
                 if (count % 6 == 0)

@@ -192,7 +192,7 @@
     //Add a new actor to the cureent movie
     function addWorker() {
         var element = $("#actorList").val();
-        
+        var index;
         var flag = false;
         //check if a genre is selected
         if (element != "") {
@@ -204,20 +204,23 @@
             }
             if (flag == false) {
                 window.currentWorkerListId.push(element);
+                //Empty the List in the html
                 $("#currentWorkersList").empty();
-                //Test
-                
+                //Print the List of select actors
                 for (var x = 0; x < window.currentWorkerListId.length; x++) {
-                    //Create a list using the Id and getting the names
-                    $("#currentWorkersList").append("<li><span class='col-md-4'>" +
-                        window.workerGenreList.WorkersCheck[window.currentWorkerListId[x] - 1].Name + " " +
-                        window.workerGenreList.WorkersCheck[window.currentWorkerListId[x] - 1].LastName + "</span>" +
-                        "<button type='button' id='w" + (window.currentWorkerListId[x]) + "'class='btn btn-danger col-md-6'>Delete</button></li>");
+                    //Create a list using the Id and getting the names from the complete List
+                    for(var y = 0; y < window.workerGenreList.WorkersCheck.length; y++){
+                        if(window.currentWorkerListId[x] == window.workerGenreList.WorkersCheck[y].WorkerId) {
+                                $("#currentWorkersList").append("<li><span class='col-md-4'>" +
+                            window.workerGenreList.WorkersCheck[y].Name + " " +
+                            window.workerGenreList.WorkersCheck[y].LastName + "</span>" +
+                            "<button type='button' value='" + window.workerGenreList.WorkersCheck[y].WorkerId + "' id='w" + window.workerGenreList.WorkersCheck[y].WorkerId + "'class='btn btn-danger col-md-6 deleteButton'>Delete</button></li>");
+                        }
+                    } 
                 }
                 //Covert the current array into a string to post it with the form
                 $("#workerString").val("");
                 $("#workerString").val(window.currentWorkerListId.toString());
-                
             }
         }
     }
@@ -277,11 +280,17 @@
             if (flag == false) {
                 window.currentGenreListId.push(element);
                 $("#currentgenreList").empty();
+                //Got throught both list comparing the id to print the select list of genres
                 for (var x = 0; x < window.currentGenreListId.length; x++) {
+                    for (var y = 0; y < window.workerGenreList.GenreCheck.length; y++) {
+                        if (window.currentGenreListId[x] == window.workerGenreList.GenreCheck[y].GenreId) {
+                            $("#currentgenreList").append("<li><span class='col-md-4'>" +
+                               window.workerGenreList.GenreCheck[y].GenreName + "</span>" + " " +
+                               "<button type='button' value='" + window.workerGenreList.GenreCheck[y].GenreId + "' id='g" + window.workerGenreList.GenreCheck[y].GenreId + "'class='btn btn-danger col-md-6 deleteButton'>Delete</button></li>");
+                        }
+                    }
                     //Create a list using the Id and getting the names
-                    $("#currentgenreList").append("<li><span class='col-md-4'>" +
-                        window.workerGenreList.GenreCheck[window.currentGenreListId[x] - 1].GenreName + "</span>" + " " +
-                        "<button type='button' id='g" + (window.currentGenreListId[x]) + "'class='btn btn-danger col-md-6'>Delete</button></li>");
+                   
                 }
                 //Covert the current array into a string to post it with the form
                 $("#genreString").val("");
@@ -290,21 +299,30 @@
         }       
     }
     //delete element from the Actors and Genre list for the current working movie
-    $(document).on('click', 'button', function () {
-        var self = this;
-        var id = self.id.toString();
-        var selector = id.slice(0, 1);
-        var element = id.slice(1, 2);
-        
-        //If the id starts with g, it is a genre element
+    $(document).on('click', '.deleteButton', function (event) {
+        var selectedId = event.target.value;
+        var buttonId = event.target.id;
+        var selector = buttonId.slice(0, 1);
+        var index;
+        //The button appned start with w for actors and g for genre, If the id starts with g, it is a genre element
         if (selector == "g"){
             $("#currentgenreList").empty();
-            var index = (window.currentGenreListId.indexOf(element));
+            //Get the index
+            for (var x = 0; x < window.currentGenreListId.length; x++) {
+                if (selectedId == window.currentGenreListId[x]) {
+                    index = x;
+                }
+            }
             window.currentGenreListId.splice(index, 1);
             for (var x = 0; x < window.currentGenreListId.length; x++) {
-                $("#currentgenreList").append("<li><span class='col-md-4'>" +
-                            window.workerGenreList.GenreCheck[window.currentGenreListId[x] - 1].GenreName + "</span>" + " " +
-                            "<button type='button' id='g" + (window.currentGenreListId[x]) + "'class='btn btn-danger col-md-6'>Delete</button></li>");
+                for (var y = 0; y < window.workerGenreList.GenreCheck.length; y++) {
+                    if (window.currentGenreListId[x] == window.workerGenreList.GenreCheck[y].GenreId) {
+                        $("#currentgenreList").append("<li><span class='col-md-4'>" +
+                           window.workerGenreList.GenreCheck[y].GenreName + "</span>" + " " +
+                           "<button type='button' value='" + window.workerGenreList.GenreCheck[y].GenreId + "' id='g" + window.workerGenreList.GenreCheck[y].GenreId +
+                           "'class='btn btn-danger col-md-6 deleteButton'>Delete</button></li>");
+                    }
+                }
             }
             //Covert the current array into a string to post it with the form
             $("#genreString").val("");
@@ -313,14 +331,25 @@
         //If the id starts with w, it is a actor(worker) element
         if (selector == "w") {
             $("#currentWorkersList").empty();
-            var index = (window.currentWorkerListId.indexOf(element));
+            //Get the index from the selected list
+            for (var x = 0; x < window.currentWorkerListId.length; x++) {
+                if (selectedId == window.workerGenreList.WorkersCheck[x]) {
+                    index = x;
+                }
+            }
+            //Remove the element from the select List
             window.currentWorkerListId.splice(index, 1);
             for (var x = 0; x < window.currentWorkerListId.length; x++) {
+                for (var y = 0; y < window.workerGenreList.WorkersCheck.length; y++) {
+                    if (window.currentWorkerListId[x] == window.workerGenreList.WorkersCheck[y].WorkerId) {
+                        $("#currentWorkersList").append("<li><span class='col-md-4'>" +
+                           window.workerGenreList.WorkersCheck[y].Name + " " +
+                           window.workerGenreList.WorkersCheck[y].LastName + "</span>" +
+                           "<button type='button' value='"+window.workerGenreList.WorkersCheck[y].WorkerId+"' id='w" + window.workerGenreList.WorkersCheck[y].WorkerId + "'class='btn btn-danger col-md-6 deleteButton'>Delete</button></li>");
+                    }
+                }
                 //Create a list using the Id and getting the names
-                $("#currentWorkersList").append("<li><span class='col-md-4'>" +
-                    window.workerGenreList.WorkersCheck[window.currentWorkerListId[x] - 1].Name + " " +
-                    window.workerGenreList.WorkersCheck[window.currentWorkerListId[x] - 1].LastName + "</span>" +
-                    "<button type='button' id='w" + (window.currentWorkerListId[x]) + "'class='btn btn-danger col-md-6'>Delete</button></li>");
+               
             }
             //Covert the current array into a string to post it with the form
             $("#workerString").val("");

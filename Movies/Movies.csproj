@@ -308,6 +308,7 @@
     <Content Include="Images\details.png" />
     <Content Include="Images\loading.gif" />
     <Content Include="Images\moviesBackground.jpg" />
+    <Content Include="Images\opacybackground.png" />
     <Content Include="Scripts\ai.0.22.9-build00167.js" />
     <Content Include="Scripts\ai.0.22.9-build00167.min.js" />
     <Content Include="ApplicationInsights.config">
