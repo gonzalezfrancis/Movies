@@ -5,18 +5,18 @@
     <tr>
         <th></th>
         <th>
-            @Html.DisplayNameFor(model => model.Title)
+            <b>@Html.DisplayNameFor(model => model.Title)</b><span id="1" style="cursor:pointer;color:#3399ff;margin-left:5px;" class="glyphicon glyphicon-sort-by-alphabet orderBy"></span>
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Description)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ReleaseDate)
+            <b>@Html.DisplayNameFor(model => model.ReleaseDate)</b><span id="2" style="cursor:pointer;color:#3399ff;margin-left:5px;" class="glyphicon glyphicon-sort-by-order orderBy"></span>
         </th>
+        
         <th>
-            @Html.DisplayNameFor(model => model.Score)
+            <b>@Html.DisplayNameFor(model => model.Score)</b><span id="3" style="cursor:pointer;color:#3399ff;margin-left:5px;" class="glyphicon glyphicon-sort-by-order orderBy"></span>
         </th>
-
         <th>
             @Html.DisplayNameFor(model => model.Trailer)
         </th>
@@ -38,6 +38,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.ReleaseDate)
             </td>
+            
             <td>
                 @Html.DisplayFor(modelItem => item.Score)
             </td>

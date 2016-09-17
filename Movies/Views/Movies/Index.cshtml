@@ -4,8 +4,10 @@
 
 <div class="middlePage ui-widget marginTop-50">
     <div class="row">
-        <div class="col-md-11"><input class="form-control" type="text" placeholder="Search" id="searchBox" /></div>
+        <div class="col-md-3"></div>
+        <div class="col-md-5"><input class="form-control" type="text" placeholder="Search" id="searchBox" /></div>
         <div class="col-md-1"><input type="button" value="Search" class="btn btn-default" id="searchButton" /></div>
+        <div class="col-md-3"></div>
     </div>
 </div>
 <div>
@@ -24,8 +26,16 @@
                     <div class="movieContainer">
                         <img class="imageStyleIndex" src="@Url.Action("GetImage", "Movies", new { id = item.MovieId }) " />
                         <div class="insideMovie">
-                            <a class="btn btn-primary movieButton" href="@Url.Action("Details", "Movies", new { id = item.MovieId }, null)">Details <span class="glyphicon glyphicon-search"></span></a><br />
-                            <a class="btn btn-primary videoPopUp fancybox.iframe movieButton" href="@string.Format("https://www.youtube.com/embed/{0}?autoplay=1", item.Trailer)">Trailer <span class="glyphicon glyphicon-film"></span></a>
+                            <a class="btn btn-primary movieButton" href="@Url.Action("Details", "Movies", new { id = item.MovieId }, null)"><span class="glyphicon glyphicon-search"></span> Details</a><br />
+                            <a class="btn btn-primary videoPopUp fancybox.iframe movieButton" href="@string.Format("https://www.youtube.com/embed/{0}?autoplay=1", item.Trailer)"><span class="glyphicon glyphicon-film"></span> Trailer</a>
+                            @if (item.Score < 5)
+                            {
+                                <p class="marginTop-20"><b><span class="text-danger glyphicon glyphicon-thumbs-down"></span><ins style="color:#ffffff;text-decoration:none;"> @string.Format("{0:N1}", item.Score) /10</ins></b></p>
+                            }
+                            else
+                            {
+                                <p class="marginTop-20"><b><span class="text-success glyphicon glyphicon-thumbs-up"></span><ins style="color:#ffffff;text-decoration:none;"> @string.Format("{0:N1}", item.Score) /10</ins></b></p>
+                            }
                         </div>
                     </div>
                     <p class="text-center indexTitle"><b>@item.Title</b></p>
@@ -101,8 +111,7 @@
                     response(myArray);
                 },
                 error: function (result) {
-                    var errorMsg = " Problem in processing your request !!";
-                    alert(errorMsg);
+                    
                 }
             });
         },
@@ -110,9 +119,9 @@
             var counter = 0;
             $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
                     //TODO: add a show all link at the end of the list
-                    return $('<li style="width:500px;">')
+                    return $('<li style="width:450px;">')
                         .append("<a href='" + '@Url.Action("Details", "Movies")?id=' + item.MovieId + "'><img style='height:100px;width:80px;margin-right:50px;' src='" + '@Url.Action("GetImage", "Movies")?id=' + item.MovieId + "'/>" +
-                        "<b>" + item.Title + "</b>(movie " + item.ReleaseDate + ")</a><br/>")
+                        "<b>" + item.Title + " </b>(" + item.ReleaseDate.slice(0,4) + ")</a><br/>")
                         .appendTo(ul);
 
                     @*return $('<li style="width:500px;">')

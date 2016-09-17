@@ -551,31 +551,45 @@ namespace Movies.Controllers
 
         //Add favorites in the user List
         [Authorize]
-        public void AddFavorites(string movie)
+        public async Task AddFavorites(string movie)
         {
             int movieId = Convert.ToInt32(movie);
             //Get the current user
             string userId = User.Identity.GetUserId();
-            var user = db.Users.SingleOrDefault(u => u.Id == userId);
+            var user = await db.Users.SingleOrDefaultAsync(u => u.Id == userId);
             //Get the movie
-            var myMovie = db.Movies.SingleOrDefault(m => m.MovieId == movieId);
+            var myMovie = await db.Movies.SingleOrDefaultAsync(m => m.MovieId == movieId);
             user.Movies.Add(myMovie);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             
         }
         [Authorize]
-        public ActionResult DeleteFavorites(string movie)
+        public async Task<ActionResult> DeleteFavorites(string movie)
         {
             int movieId = Int32.Parse(movie);
             //Get the current user
             string userId = User.Identity.GetUserId();
-            var user = db.Users.SingleOrDefault(u => u.Id == userId);
+            var user = await db.Users.SingleOrDefaultAsync(u => u.Id == userId);
             //Get the movie
-            var myMovie = db.Movies.SingleOrDefault(m => m.MovieId == movieId);
+            var myMovie = await db.Movies.SingleOrDefaultAsync(m => m.MovieId == movieId);
             user.Movies.Remove(myMovie);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             //Return the partial view to update favorites
-            return PartialView("_FavoritePartial", user.Movies.ToList());
+            return PartialView("_FavoritePartial", user.Movies.OrderBy(m => m.Title).ToList());
+        }
+        [Authorize]
+        public async Task<ActionResult> FavoriteOrderBy(int? selector)
+        {
+            string userId = User.Identity.GetUserId();
+            var user = await db.Users.SingleOrDefaultAsync(u => u.Id == userId);
+            switch(selector)
+            {
+                case 2: return PartialView("_FavoritePartial", user.Movies.OrderByDescending(m => m.ReleaseDate).ToList());
+
+                case 3: return PartialView("_FavoritePartial", user.Movies.OrderByDescending(m => m.Score).ToList());
+
+                default: return PartialView("_FavoritePartial", user.Movies.OrderBy(m => m.Title).ToList());
+            }
         }
         protected override void Dispose(bool disposing)
         {

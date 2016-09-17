@@ -48,7 +48,24 @@
                 });
             });
         });
-        
+        //Order by letter
+        $(document).on('click', '.orderBy', function (event) {
+            var selector = event.target.id;
+            $.ajax({
+                url: '@Url.Action("FavoriteOrderBy", "Movies")',
+                data: { "selector": selector },
+                type: 'GET',
+                dataType: 'html',
+                cache: false,
+                success: function (data) {
+                    
+                    $("#favorites").html(data);
+                },
+                error: function () {
+                    bootstrap_alert("danger", "Ups an error has ocurred :( !!!!!");
+                }
+            });
+        });
         //Bootstrap alert
         bootstrap_alert = function (message) {
             $(".alertPlaceHolder").html("<div class='alert alert-warning alert-dismissible' role='alert'>" +
