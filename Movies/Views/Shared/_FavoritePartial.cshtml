@@ -44,7 +44,7 @@
             </td>
 
             <td>
-                <a class="videoPopUp fancybox.iframe" href="@string.Format("https://www.youtube.com/embed/{0}?autoplay=1", item.Trailer)"><span style="font-size:30px;" class="glyphicon glyphicon-film"></span></a>
+                <a class="videoPopUp fancybox.iframe" href="@string.Format("https://www.youtube.com/embed/{0}?autoplay=1&rel=0", item.Trailer)"><span style="font-size:30px;" class="glyphicon glyphicon-film"></span></a>
             </td>
             <td>
                 @Html.ActionLink("Details", "Details", new { id = item.MovieId }) 

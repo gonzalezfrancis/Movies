@@ -1,31 +1,110 @@
 ﻿@{
     ViewBag.Title = "Home Page";
+    ViewBag.Selector = 1;
+    
 }
+@*<div id="headingVideo" class="col-md-offset-1 col-md-10"> style="display:none;"
+        <iframe id="player" src="https://www.youtube.com/embed/QpikTTSOHXc?enablejsapi=1&?autoplay=1" frameborder="0" allowfullscreen></iframe>
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-</div>
+    </div>*@
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+<div class="row marginTop-20">
+    <div id="playerContainer" class="col-md-offset-1 col-md-10">
+        <div id="playerOverLayer" style="opacity:0.3;position:absolute;z-index:2;width:100%;"></div>
+        <div id="player" style="display:none;"></div>
     </div>
 </div>
+<div class="row text-center">
+    <h1>Welcome to Movie Factory</h1>
+</div>
+<div class="row marginTop-50">
+    <div class="text-center col-md-4">
+        <h2>Most Popular</h2>
+        <p><a class="btn btn-default" href="@Url.Action("Index", "Movies")">Most Popular</a></p>
+    </div>
+    <div class="text-center col-md-4">
+        <h2>Latest Releases</h2>
+        <p><a class="btn btn-default" href="@Url.Action("Index", "movies")?selector=2">Latest Releases</a></p>
+    </div>
+    <div class="text-center col-md-4">
+        <h2>Coming Soon</h2>
+        <p><a class="btn btn-default" href="@Url.Action("Index", "movies")?selector=3">Coming Soon</a></p>
+    </div>
+</div>
+@section scripts{
+<script>
+    $(document).ready(function () {
+
+        window.videos = ["Q-b7B8tOAQU", "QpikTTSOHXc"];
+        window.counter = 0;
+        openVideoContainer();
+    });
+    //Loads the IFrame Player API code asynchronously
+    var tag = document.createElement('script');
+
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+      
+
+      // 3. This function creates an <iframe> (and YouTube player)
+      //    after the API code downloads.
+      var player;
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+          height: '400px',
+          width: '100%',
+          videoId: 'j-RSgSqnIxE',
+          playerVars: { 'playlist': 'QEsRfqDUZAE,Q-b7B8tOAQU,QpikTTSOHXc', 'autoplay': 1, 'controls': 0, "rel": 0 , "loop": 1 },
+          events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange
+          }
+        });
+          //Check:j-RSgSqnIxE,  QEsRfqDUZAE,  Q-b7B8tOAQU  
+      }
+      // 4. The API will call this function when the video player is ready.
+      function onPlayerReady(event) {
+        event.target.playVideo();
+      }
+      function playVideo() {
+          openVideoContainer()
+          player.playVideo();
+
+      }
+
+      //Event trigger when player finish video
+      function onPlayerStateChange(event) {
+          if (event.data === 0) {
+              closeVideoContainer()
+              event.target.stopVideo();
+              //Wait 15Secods before play the next
+              setTimeout(function () { playVideo() }, 40000);
+              
+          }
+        
+      }
+      function openVideoContainer() {
+          $("#playerOverLayer").animate({
+              height: "450px",
+          },3000, 'linear');
+          $("#playerContainer").animate({
+              height: "450px",
+          },3000 , "linear", function () {
+              //Your code after animation finished
+              $("#player").css("display", "block");
+          });
+      }
+      function closeVideoContainer() {
+          $("#playerOverLayer").animate({
+              height: "0px",
+          }, 1000, 'linear');
+          $("#playerContainer").animate({
+              height: "0px",
+          }, 1000, "linear", function () {
+                    $("#player").css("display", "none");
+                });
+      }
+</script>   
+}

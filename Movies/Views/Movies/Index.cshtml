@@ -5,8 +5,10 @@
 <div class="middlePage ui-widget marginTop-50">
     <div class="row">
         <div class="col-md-3"></div>
-        <div class="col-md-5"><input class="form-control" type="text" placeholder="Search" id="searchBox" /></div>
-        <div class="col-md-1"><input type="button" value="Search" class="btn btn-default" id="searchButton" /></div>
+        <div class="col-md-6 input-group">
+            <input class="form-control" type="text" placeholder="Search" id="searchBox" />
+            <span style="cursor:pointer;" value="Search" class="input-group-addon" id="searchButton">Search</span>
+        </div> 
         <div class="col-md-3"></div>
     </div>
 </div>
@@ -27,7 +29,7 @@
                         <img class="imageStyleIndex" src="@Url.Action("GetImage", "Movies", new { id = item.MovieId }) " />
                         <div class="insideMovie">
                             <a class="btn btn-primary movieButton" href="@Url.Action("Details", "Movies", new { id = item.MovieId }, null)"><span class="glyphicon glyphicon-search"></span> Details</a><br />
-                            <a class="btn btn-primary videoPopUp fancybox.iframe movieButton" href="@string.Format("https://www.youtube.com/embed/{0}?autoplay=1", item.Trailer)"><span class="glyphicon glyphicon-film"></span> Trailer</a>
+                            <a class="btn btn-primary videoPopUp fancybox.iframe movieButton" href="@string.Format("https://www.youtube.com/embed/{0}?autoplay=1&rel=0", item.Trailer)"><span class="glyphicon glyphicon-film"></span> Trailer</a>
                             @if (item.Score < 5)
                             {
                                 <p class="marginTop-20"><b><span class="text-danger glyphicon glyphicon-thumbs-down"></span><ins style="color:#ffffff;text-decoration:none;"> @string.Format("{0:N1}", item.Score) /10</ins></b></p>

@@ -12,8 +12,10 @@
 <div class="ui-widget">
     <div class="row marginTop-100">
         <div class="col-md-3"></div>
-            <div class="col-md-5"><input class="form-control" type="text" placeholder="Search" id="searchBox"/></div>
-            <div class="col-md-1"><input type="button" value="Search" class="btn btn-default" id="searchButton"/></div>
+        <div class="col-md-6 input-group">
+            <input class="form-control" type="text" placeholder="Search" id="searchBox"/>
+            <span style="cursor:pointer;" value="Search" class="input-group-addon" id="searchButton">Search</span>
+        </div>
         <div class="col-md-3"></div>
     </div>
 </div>
@@ -59,7 +61,7 @@
 
                                 @if (item.Score < 5)
                                 {
-                                    <p style="font-size:20px;"><span class="text-danger glyphicon glyphicon-thumbs-down"></span>@Html.DisplayFor(i => item.Score)/10</p>
+                                    <p style="font-size:20px;"><span class="text-danger glyphicon glyphicon-thumbs-down"></span> @Html.DisplayFor(i => item.Score)/10</p>
                                 }
                                 else
                                 {
@@ -68,7 +70,7 @@
                             </div>
                         </div>
                         <div class="row marginTop-20 text-center">
-                            <a class="btn btn-primary videoPopUp fancybox.iframe" href="@string.Format("https://www.youtube.com/embed/{0}?autoplay=1", item.Trailer)">Watch Trailer</a>
+                            <a class="btn btn-primary videoPopUp fancybox.iframe" href="@string.Format("https://www.youtube.com/embed/{0}?autoplay=1&rel=0", item.Trailer)"><span class="glyphicon glyphicon-film"></span> Watch Trailer</a>
                         </div>
                     </div>
                     
@@ -79,7 +81,7 @@
     </div>
     <div class="col-md-1"></div>
 </div>
-    @Html.PagedListPager(Model, page => Url.Action("Movies", "Index", new { page }))
+    @Html.PagedListPager(Model, page => Url.Action("Search", "Movies", new { page, ViewBag.query }))
     @******************** Test using Knockout ******************@
     @*<div data-bind="foreach: Movies">
             <div class="row rowHeight">

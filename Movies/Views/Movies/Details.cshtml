@@ -21,7 +21,7 @@
         @*Relesase Date*@
         <div class="row">
             <div class="col-md-8"><p><b>@Html.DisplayNameFor(model => model.ReleaseDate)</b></p><p>@Html.DisplayFor(model => model.ReleaseDate)</p></div>
-            <div class="col-md-4"><a class="marginTop-15 btn btn-primary videoPopUp fancybox.iframe" href="@string.Format("https://www.youtube.com/embed/{0}?autoplay=1", Model.Trailer)"><span class="glyphicon glyphicon-film"></span> Watch Trailer</a></div>
+            <div class="col-md-4"><a class="marginTop-15 btn btn-primary videoPopUp fancybox.iframe" href="@string.Format("https://www.youtube.com/embed/{0}?autoplay=1&rel=0", Model.Trailer)"><span class="glyphicon glyphicon-film"></span> Watch Trailer</a></div>
         </div>
         <br/>
         @*Scrore*@

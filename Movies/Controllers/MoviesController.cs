@@ -60,7 +60,7 @@ namespace Movies.Controllers
             {
                 search = db.Movies.Where(s => s.Title.StartsWith(query)).ToList();
             }
-            
+            ViewBag.query = query;
             return View("Search", search.ToPagedList(page ?? 1, 5));
         }
         //GET: Movies/IndexAdmin
