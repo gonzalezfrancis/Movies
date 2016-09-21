@@ -7,16 +7,20 @@
         <iframe id="player" src="https://www.youtube.com/embed/QpikTTSOHXc?enablejsapi=1&?autoplay=1" frameborder="0" allowfullscreen></iframe>
 
     </div>*@
-
+<div class="row text-center">
+    <h1>Welcome to Movie Factory</h1>
+</div>
 <div class="row marginTop-20">
     <div id="playerContainer" class="col-md-offset-1 col-md-10">
         <div id="playerOverLayer" style="opacity:0.3;position:absolute;z-index:2;width:100%;"></div>
         <div id="player" style="display:none;"></div>
     </div>
 </div>
-<div class="row text-center">
-    <h1>Welcome to Movie Factory</h1>
-</div>
+@*<div class="row">
+    <div class="col-md-offset-1 col-md-10">
+        <p>Movie Factory is a personal project for those of you who love movies.</p>
+    </div>
+</div>*@
 <div class="row marginTop-50">
     <div class="text-center col-md-4">
         <h2>Most Popular</h2>
@@ -34,10 +38,8 @@
 @section scripts{
 <script>
     $(document).ready(function () {
-
-        window.videos = ["Q-b7B8tOAQU", "QpikTTSOHXc"];
-        window.counter = 0;
-        openVideoContainer();
+        //Wait 5 seconds before executing
+        setTimeout(function () { playVideo(); }, 10000);
     });
     //Loads the IFrame Player API code asynchronously
     var tag = document.createElement('script');
@@ -53,21 +55,21 @@
       var player;
       function onYouTubeIframeAPIReady() {
         player = new YT.Player('player', {
-          height: '400px',
+          height: '480px',
           width: '100%',
-          videoId: 'j-RSgSqnIxE',
-          playerVars: { 'playlist': 'QEsRfqDUZAE,Q-b7B8tOAQU,QpikTTSOHXc', 'autoplay': 1, 'controls': 0, "rel": 0 , "loop": 1 },
+          videoId: 'gLJdzky63BA',
+          playerVars: { 'playlist': 'Q-b7B8tOAQU,QpikTTSOHXc,Tf4sa0BVJVw,r6FxROAHJH4', 'suggestedQuality': 'large', 'controls': 0, "rel": 0, "loopPlaylists": true },
           events: {
-            'onReady': onPlayerReady,
-            'onStateChange': onPlayerStateChange
+            //'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange,
           }
         });
           //Check:j-RSgSqnIxE,  QEsRfqDUZAE,  Q-b7B8tOAQU  
       }
       // 4. The API will call this function when the video player is ready.
-      function onPlayerReady(event) {
-        event.target.playVideo();
-      }
+      //function onPlayerReady(event) {
+      //  event.target.playVideo();
+      //}
       function playVideo() {
           openVideoContainer()
           player.playVideo();
@@ -87,10 +89,10 @@
       }
       function openVideoContainer() {
           $("#playerOverLayer").animate({
-              height: "450px",
+              height: "500px",
           },3000, 'linear');
           $("#playerContainer").animate({
-              height: "450px",
+              height: "500px",
           },3000 , "linear", function () {
               //Your code after animation finished
               $("#player").css("display", "block");

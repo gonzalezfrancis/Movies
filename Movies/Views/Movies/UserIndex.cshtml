@@ -7,6 +7,9 @@
 <h2>Your Favorites</h2>
 
 <div class="alertPlaceHolder"></div>
+<div class="marginTop-20 marginBott-20">
+    <a class="orderBy" id="s4" style="cursor:pointer;text-decoration:none;"><span class="glyphicon glyphicon-time"></span> Coming soon</a>
+</div>
 <div id="favorites">
     @Html.Partial("_FavoritePartial", Model)
 </div>
@@ -50,7 +53,9 @@
         });
         //Order by letter
         $(document).on('click', '.orderBy', function (event) {
-            var selector = event.target.id;
+            var idSelector = event.target.id;
+            var selector = idSelector.slice(1, 2);
+           
             $.ajax({
                 url: '@Url.Action("FavoriteOrderBy", "Movies")',
                 data: { "selector": selector },

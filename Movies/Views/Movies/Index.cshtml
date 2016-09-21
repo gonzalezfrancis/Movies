@@ -26,7 +26,7 @@
                 }
                 <div class="col-md-2" style="height:300px;">
                     <div class="movieContainer">
-                        <img class="imageStyleIndex" src="@Url.Action("GetImage", "Movies", new { id = item.MovieId }) " />
+                        <img class="imageStyleIndex img-responsive" src="@Url.Action("GetImage", "Movies", new { id = item.MovieId }) " />
                         <div class="insideMovie">
                             <a class="btn btn-primary movieButton" href="@Url.Action("Details", "Movies", new { id = item.MovieId }, null)"><span class="glyphicon glyphicon-search"></span> Details</a><br />
                             <a class="btn btn-primary videoPopUp fancybox.iframe movieButton" href="@string.Format("https://www.youtube.com/embed/{0}?autoplay=1&rel=0", item.Trailer)"><span class="glyphicon glyphicon-film"></span> Trailer</a>

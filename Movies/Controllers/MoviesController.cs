@@ -580,6 +580,9 @@ namespace Movies.Controllers
         [Authorize]
         public async Task<ActionResult> FavoriteOrderBy(int? selector)
         {
+            //Get current date
+            var today = DateTime.Now;
+            
             string userId = User.Identity.GetUserId();
             var user = await db.Users.SingleOrDefaultAsync(u => u.Id == userId);
             switch(selector)
@@ -587,6 +590,8 @@ namespace Movies.Controllers
                 case 2: return PartialView("_FavoritePartial", user.Movies.OrderByDescending(m => m.ReleaseDate).ToList());
 
                 case 3: return PartialView("_FavoritePartial", user.Movies.OrderByDescending(m => m.Score).ToList());
+
+                case 4: return PartialView("_FavoritePartial", user.Movies.Where(i => i.ReleaseDate > today).OrderByDescending(m => m.ReleaseDate).ToList());
 
                 default: return PartialView("_FavoritePartial", user.Movies.OrderBy(m => m.Title).ToList());
             }
