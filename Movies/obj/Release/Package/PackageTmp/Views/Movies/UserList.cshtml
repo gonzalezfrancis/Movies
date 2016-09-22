@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Movies.Models.UserRoleViewModel>
+
+@{
+    ViewBag.Title = "UserList";
+}
+
+<h2>Users List</h2>
+
+
+
+<div id="userList">
+    @Html.Partial("_UsersPartial", Model)
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            //Use the selector as document when try to target a partial view
+            //Add user to admin role
+            $(document).on('click', '.AddUser', function (event) {
+                var userId = event.target.id;
+                $.ajax({
+                    url: '@Url.Action("AddRole", "Movies")',
+                    data: { "id": userId },
+                    type: 'GET',
+                    dataType: 'html',
+                    cache: false,
+                    success: function (data) {
+                        //Update user List
+                        $("#userList").html(data);
+                    }
+                });
+            });
+            //Remove a user from role Admin
+            $(document).on('click', '.RemoveUser', function (event) {
+                var userId = event.target.id;
+                $.ajax({
+                    url: '@Url.Action("RemoveRole", "Movies")',
+                    data: { "id": userId },
+                    type: 'GET',
+                    dataType: 'html',
+                    cache: false,
+                    success: function (data) {
+                        //Update the user List
+                        $("#userList").html(data);
+                    }
+                });
+            });
+        });       
+    </script>    
+}

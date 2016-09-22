@@ -40,7 +40,7 @@ namespace Movies
             bundles.Add(new ScriptBundle("~/bundles/jquery-UI").Include(
                         "~/Scripts/jquery-ui-{version}.js"));
             //FancyBox
-            bundles.Add(new StyleBundle("~/Content/fancyBox").Include(
+            bundles.Add(new StyleBundle("~/Content/fancy").Include(
                     "~/Content/jquery.fancybox.css",
                     "~/Content/jquery.fancybox-thumbs.css",
                     "~/Content/jquery.fancybox-buttons.css"));

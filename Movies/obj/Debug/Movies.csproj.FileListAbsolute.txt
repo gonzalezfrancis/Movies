@@ -99,3 +99,5 @@ D:\ASPNet Projects\Movies\Movies\Movies\bin\PagedList.dll
 D:\ASPNet Projects\Movies\Movies\Movies\bin\PagedList.Mvc.dll
 D:\ASPNet Projects\Movies\Movies\Movies\bin\PagedList.xml
 D:\ASPNet Projects\Movies\Movies\Movies\bin\PagedList.Mvc.xml
+D:\ASPNet Projects\Movies\Movies\Movies\obj\Debug\Movies.Migrations.InitialCreate.resources
+D:\ASPNet Projects\Movies\Movies\Movies\obj\Debug\Movies.csproj.GenerateResource.Cache

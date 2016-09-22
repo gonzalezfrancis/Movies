@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Movies.Models.Movie>
+
+
+<table class="table">
+    <tr>
+        <th></th>
+        <th>
+            <b>@Html.DisplayNameFor(model => model.Title)</b><span id="s1" style="cursor:pointer;color:#3399ff;margin-left:5px;" class="glyphicon glyphicon-sort-by-alphabet orderBy"></span>
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th>
+            <b>@Html.DisplayNameFor(model => model.ReleaseDate)</b><span id="s2" style="cursor:pointer;color:#3399ff;margin-left:5px;" class="glyphicon glyphicon-sort-by-order orderBy"></span>
+        </th>
+        
+        <th>
+            <b>@Html.DisplayNameFor(model => model.Score)</b><span id="s3" style="cursor:pointer;color:#3399ff;margin-left:5px;" class="glyphicon glyphicon-sort-by-order orderBy"></span>
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Trailer)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <img style="width:50px;height:70px" src="@Url.Action("GetImage", "Movies", new {id = item.MovieId})" />
+            </td>
+            <td>
+                <b>@Html.DisplayFor(modelItem => item.Title)</b>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReleaseDate)
+            </td>
+            
+            <td>
+                @Html.DisplayFor(modelItem => item.Score)
+            </td>
+
+            <td>
+                <a class="videoPopUp fancybox.iframe" href="@string.Format("https://www.youtube.com/embed/{0}?autoplay=1&rel=0", item.Trailer)"><span style="font-size:30px;" class="glyphicon glyphicon-film"></span></a>
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Details", new { id = item.MovieId }) 
+                <br/><br/>
+                <a style="cursor:pointer;" id="@item.MovieId" class="moviesItem">Delete</a>
+                
+            </td>
+        </tr>
+    }
+
+</table>

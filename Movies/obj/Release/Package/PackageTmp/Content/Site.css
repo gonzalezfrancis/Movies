@@ -1,0 +1,160 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+    background-color:#ffffff;
+    min-height:70%;
+    margin-bottom:0px;
+    border-radius:15px;
+}
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+#currentgenreList{
+    list-style-type:none;
+}
+.marginTop-20{
+    margin-top:20px;
+}
+.marginTop-15{
+    margin-top:15px;
+}
+.marginBott-20{
+    margin-bottom:20px;
+}
+.marginBott-100{
+    margin-bottom:100px;
+}
+.marginTop-50{
+    margin-top:50px;
+}
+.marginTop-100{
+     margin-top:100px;
+}
+.marginTop-200{
+    margin-top:200px;
+}
+.imageStyle{
+    margin-top:20px;
+    margin-left:20px;
+    height:270px;
+    width:190px;
+}
+.whiteSpace{
+    background-color:#ffffff;
+    height:50px;
+}
+.textSize-200{
+    font-size:200%;
+}
+.glyphiconSize{
+    font-size:30px;
+}
+
+.redText{
+    color:#ff0000;
+}
+body{
+    background-image:url(../Images/moviesBackground.jpg);
+    background-attachment:fixed;
+    background-repeat:no-repeat;
+    background-size:cover;
+}
+.genreContainer{
+    height:500px;
+    overflow-y:auto;
+    overflow-x:hidden;
+}
+.editGenreContainer{
+    height:150px;
+    overflow-y:auto;
+    overflow-x:hidden;
+}
+.editActorContainer{
+    height:200px;
+    overflow-y:auto;
+    overflow-x:hidden;
+}
+/*Index Movies Controller*/
+.insideMovie{
+    height:240px;
+    width:80%;
+    visibility:hidden;
+    text-align:center;
+}
+.indexTitle{
+    height:60px;
+    margin-top:5px;
+}
+.imageStyleIndex{
+    height:240px;
+    width:80%;
+    z-index:1;
+    position:absolute;
+}
+.movieContainer:hover .insideMovie{
+    background-image:url(../Images/opacybackground.png);
+    visibility:visible;
+    position:absolute;
+    width:80%;
+    z-index:2;
+}
+.movieButton{
+    text-align:center;
+    width:100px;
+    margin:30px auto 0 auto;
+}
+.movieContainer:hover .imageStyleIndex{
+    /*z-index:-1;*/
+}
+.movieContainer{
+    height:240px;
+}
+/*Autocomplete box*/
+.ui-state-active,
+.ui-widget-content .ui-state-active,
+.ui-widget-header .ui-state-active, 
+.ui-autocomplete, .ui-autocomplete:hover, 
+.ui-menu-item, .ui-menu-item:hover,
+.ui-menu-item a, .ui-menu-item a:hover,
+.ui-widget-content .ui-state-focus,
+.ui-widget-header .ui-state-focus,
+.ui-widget-content .ui-state-hover,
+.ui-widget-header .ui-state-hover,
+.ui-menu .ui-menu-item a.ui-state-focus,
+.ui-menu .ui-menu-item a.ui-state-active,
+.ui-menu .ui-menu-item a
+{ 
+    background: #ffffff none no-repeat; 
+    padding:0;
+    margin:0;
+    display:block;
+    border:0;
+    border-collapse:collapse;
+}
+.ui-state-active,
+.ui-widget-content .ui-state-active,
+.ui-widget-header .ui-state-active,
+.ui-autocomplete, .ui-autocomplete:hover,
+.ui-menu-item, .ui-menu-item:hover,
+.ui-menu-item a, .ui-menu-item a:hover,
+.ui-widget-content .ui-state-focus,
+.ui-widget-header .ui-state-focus,
+.ui-widget-content .ui-state-hover,
+.ui-widget-header .ui-state-hover,
+.ui-menu .ui-menu-item a.ui-state-focus,
+.ui-menu .ui-menu-item a.ui-state-active,
+.ui-menu .ui-menu-item a:hover 
+{
+    color:#000000;
+    
+}
+

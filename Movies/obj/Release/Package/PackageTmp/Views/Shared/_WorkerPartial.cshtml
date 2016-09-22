@@ -1,0 +1,87 @@
+﻿@using Movies.CustomHelpers
+@model IEnumerable<Movies.Models.Worker>
+<div class="row">
+    <div class="col-md-6">
+        <div class="row marginTop-20">
+            <div class="col-md-1"></div>
+            <div class="col-md-2"><a class="orderBy" id="s1" href="#">A - C</a></div>
+            <div class="col-md-2"><a class="orderBy" id="s2" href="#">D - F</a></div>
+            <div class="col-md-2"><a class="orderBy" id="s3" href="#">G - I</a></div>
+            <div class="col-md-2"><a class="orderBy" id="s4" href="#">J - L</a></div>
+            <div class="col-md-2"><a class="orderBy" id="s5" href="#">M - O</a></div>
+            
+        </div>
+        <div class="row marginTop-20">
+            <div class="col-md-1"></div>
+            <div class="col-md-2"><a class="orderBy" id="s6" href="#">P - R</a></div>
+            <div class="col-md-2"><a class="orderBy" id="s7" href="#">S - U</a></div>
+            <div class="col-md-2"><a class="orderBy" id="s8" href="#">V - X</a></div>
+            <div class="col-md-2"><a class="orderBy" id="s9" href="#">Y - Z</a></div>
+            <div class="col-md-2"><a class="orderBy" id="s10" href="#">Show all</a></div>
+            
+        </div>
+        <div class="row marginTop-20">
+            <div class="col-md-1"></div>
+            <div class="col-md-5">
+                <b>@Html.DisplayNameFor(model => model.Name)</b><span id="s10" style="cursor:pointer;color:#3399ff;margin-left:5px;" class="glyphicon glyphicon-sort-by-alphabet orderBy"></span>
+            </div>
+            <div class="col-md-4">
+                <b>@Html.DisplayNameFor(model => model.LastName)</b><span id="s11" style="cursor:pointer;color:#3399ff;margin-left:5px;" class="glyphicon glyphicon-sort-by-alphabet orderBy"></span>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <hr />
+        @foreach (var item in Model)
+        {
+            <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-4">
+                    @Html.CustomLabel(string.Format("FirstName_{0}", item.WorkerId), item.Name)
+                </div>
+                <div class="col-md-4">
+                   @Html.CustomLabel(string.Format("LastName_{0}", item.WorkerId), item.LastName)
+                </div>
+                <div class="col-md-1">
+                    <a class="editWorker" name="@item.WorkerId" href="#">Edit</a>
+                    <a class="deleteWorker" name="@item.WorkerId" href="#">Delete</a>
+                </div>
+                <div class="col-md-1"></div>
+                <div class="col-md-1" id="saveButton_@item.WorkerId"></div>
+            </div>
+            <hr />
+        }
+    </div>
+    @*Right side section*@
+    <div class="col-md-6">
+        <div class="row">
+            <h2 class="text-center">Add a new Actor</h2>
+        </div>
+        <div class="row marginTop-50">
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">First Name: </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4"><input class="form-control addFirstNameVal" /></div>  
+            </div>
+            <div class="row marginTop-20">
+                <div class="col-md-4"></div>
+                <div class="col-md-4">Last Name: </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-4"><input class="form-control addLastNameVal" /></div>
+            </div>
+            <div class="row marginTop-20">
+                <div class="col-md-4"></div>
+                <div class="col-md-4"><button type="button" class="btn btn-success addWorker">Add Actor</button></div>  
+            </div>
+        </div>
+    </div>
+                
+        
+
+    
+
+</div>

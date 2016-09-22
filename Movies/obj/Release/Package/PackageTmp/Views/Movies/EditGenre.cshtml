@@ -1,0 +1,97 @@
+﻿@model IEnumerable<Movies.Models.Genre>
+
+<h2 class="text-center">Genre List</h2>
+@*Genre Conatiner*@
+<div class="alertPlaceHolder"></div>
+<div id="GenreList">
+    @Html.Partial("_GenrePartial", Model)
+</div>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            //Delete Genre
+            $(document).on('click', '.removeGenre', function (event) {
+                var genreId = event.target.name;
+                $(".alertPlaceHolder").empty();
+                if (confirm("Are you sure?")) {
+                    $.ajax({
+                        url: '@Url.Action("DeleteGenre", "Movies")',
+                        data: { "id": genreId },
+                        type: 'GET',
+                        dataType: 'html',
+                        cache: false,
+                        success: function (data) {
+                            $("#GenreList").html(data);
+                            //Open the alert box
+                            bootstrap_alert("warning", "The genre has been deleted successfully");
+                        },
+                        error: function () {
+                            bootstrap_alert("danger", "Ups an error has ocurred :( !!!!!");
+                        }
+                    });
+                }
+                return false;
+            });
+            //Add a new Genre
+            $(document).on('click', '.addGenre', function (event) {
+                var genre = $(".addGenreVal").val();
+                $(".alertPlaceHolder").empty();
+                if (genre != "") {
+                    $.ajax({
+                        url: '@Url.Action("AddGenre", "Movies")',
+                        data: { "genre": genre },
+                        type: 'GET',
+                        dataType: 'html',
+                        cache: false,
+                        success: function (data) {
+                            $("#GenreList").html(data);
+                            //Open the alert box
+                            bootstrap_alert("success", "The new genre has been added successfully");
+                        },
+                        error: function () {
+                            bootstrap_alert("danger", "Ups an error has ocurred :( !!!!!");
+                        }
+                    });
+                }
+                    
+            });
+            //Edit Genre
+            $(document).on('click', '.editGenre', function (event) {
+                var genreId = event.target.name;
+                var genreVal = $("#" + genreId + "").html();
+                
+                $("#" + genreId + "").replaceWith("<input class='form-control' id='" + genreId + "' value='" + genreVal + "'/>");
+                $("#saveButton_" + genreId + "").append("<button type='button' name='"+genreId+"' id='button_"+genreId+"' class='btn btn-warning saveButton'>Save</button>");
+            });
+            //Save edit
+            $(document).on('click', '.saveButton', function (event) {
+                var genreId = event.target.name;
+                var value = $("#" + genreId + "").val();
+                $(".alertPlaceHolder").empty();
+                if (value != "") {
+                    $.ajax({
+                        url: '@Url.Action("SaveEdit", "Movies")',
+                        data: { "id": genreId, "value": value },
+                        type: 'GET',
+                        dataType: 'html',
+                        cache: false,
+                        success: function (data) {
+                            $("#GenreList").html(data);
+                            bootstrap_alert("success", "The genre has been edited successfully");
+                        },
+                        error: function () {
+                            bootstrap_alert("danger", "Ups an error has ocurred :( !!!!!");
+                        }
+                    });
+                }
+                
+            });
+            //Bootstrap alert
+            bootstrap_alert = function (type, message) {
+                $(".alertPlaceHolder").html("<div class='alert alert-"+ type +" alert-dismissible' role='alert'>" +
+                                            "<button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>" +
+                                            "&times;</span><span class='sr-only'>Close</span></button><strong>" + message + "</strong></div>");
+            }
+        });
+    </script>    
+}

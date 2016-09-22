@@ -1,0 +1,45 @@
+﻿@using Movies.CustomHelpers;
+@model IEnumerable<Movies.Models.Genre>
+
+<div class="row">
+    @*Genre List side*@
+    <div class="col-md-5">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-10">
+                <h3>@Html.DisplayNameFor(model => model.GenreName)</h3>
+            </div>
+        </div>
+        <hr />
+        <div class="row genreContainer">
+            @foreach (var item in Model)
+            {
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-7">
+                        @Html.CustomLabel(item.GenreId.ToString(), item.GenreName)
+                    </div>
+                    <div class="col-md-2">
+                        <a class="editGenre" name="@item.GenreId" href="#">Edit</a>
+                        <a class="removeGenre" name="@item.GenreId" href="#">Delete</a>
+                    </div>
+                    <div class="col-md-1" id="saveButton_@item.GenreId"></div>
+                </div>
+                <hr />
+            }
+        </div>
+    </div>
+    @*Edition side*@
+    <div class="col-md-7">
+        <div class="row">
+            <h2 class="text-center">Add a new Genre</h2>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-5"><input class="addGenreVal form-control" /></div>
+            <div class="col-md-4"><button type="button" class="addGenre btn btn-success">Add Genre</button></div>
+        </div>
+    </div>
+</div>
+

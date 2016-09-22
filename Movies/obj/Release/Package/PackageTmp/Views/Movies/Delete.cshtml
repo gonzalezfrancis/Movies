@@ -1,0 +1,75 @@
+﻿@model Movies.Models.Movie
+@using Movies.Models
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<hr />
+<div class="row">
+    <div class="col-md-7">
+        <div class="row">
+            <div class="col-md-2">
+                <b>@Html.DisplayFor(model => model.Title)</b>
+            </div>
+
+            <div class="col-md-10">
+                @Html.DisplayFor(model => model.Description)
+            </div>
+        </div>
+        <div class="row marginTop-20">
+            <div class="col-md-6">
+                <b>Release Date: </b>@Html.DisplayFor(model => model.ReleaseDate)
+            </div>
+
+            <div class="col-md-6">
+                <b>Average Score: </b>@Html.DisplayFor(model => model.Score)
+            </div>
+        </div>
+        <div class="row marginTop-20">
+            <div class="col-md-6">
+                <b>Genre: </b>@foreach(Genre item in Model.Genres)
+                {
+                    @item.GenreName <ins>  </ins>
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <b>Actors: </b>@foreach (Worker item in Model.Workers)
+                {
+                    <ins>  </ins>@item.Name <ins>  </ins> @item.LastName <ins>,</ins>
+                }
+            </div>
+        </div>
+        <div style="margin-left:20px;"class="row marginTop-20">
+            <iframe width="400" height="200" src="https://www.youtube.com/embed/@(Model.Trailer)" frameborder="0" allowfullscreen></iframe> 
+        </div>
+    </div>
+    <div class="col-md-5">
+        <img class="img-responsive imageStyle marginTop-100" src="@Url.Action("GetImage", "Movies", new { id = Model.MovieId})" />
+    </div>
+</div>
+<div class="row marginTop-100">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color col-md-offset-4">
+            <input type="submit" value="Delete" class="btn btn-danger" /> |
+            @Html.ActionLink("Cancel", "IndexAdmin", "Movies", new { @class = "btn btn-default" })
+        </div>
+    }
+</div>
+@section scripts {
+    <script>
+        $(document).ready(function() {
+            
+            
+            
+
+        });
+    </script>    
+}

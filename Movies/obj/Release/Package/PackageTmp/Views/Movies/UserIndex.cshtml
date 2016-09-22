@@ -1,0 +1,81 @@
+﻿@model IEnumerable<Movies.Models.Movie>
+
+@{
+    ViewBag.Title = "UserIndex";
+}
+
+<h2>Your Favorites</h2>
+
+<div class="alertPlaceHolder"></div>
+<div class="marginTop-20 marginBott-20">
+    <a class="orderBy" id="s4" style="cursor:pointer;text-decoration:none;"><span class="glyphicon glyphicon-time"></span> Coming soon</a>
+</div>
+<div id="favorites">
+    @Html.Partial("_FavoritePartial", Model)
+</div>
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            //Trailer window
+            $(".videoPopUp").fancybox({
+                maxWidth: 800,
+                maxHeight: 600,
+                fitToView: false,
+                width: '70%',
+                height: '70%',
+                autoSize: false,
+                closeClick: false,
+                openEffect: 'none',
+                closeEffect: 'none'
+            });
+            //Notice: Put selector inside the on to avoid stop firing after refresh partial view
+            $(document).on('click', ".moviesItem", function (event) {
+                
+                var movieId = event.target.id;
+
+                $.ajax({
+                    url: '@Url.Action("DeleteFavorites", "Movies")',
+                    data: { "movie": movieId },
+                    type: 'GET',
+                    dataType: 'html',
+                    cache: false,
+                    success: function (data) {
+                        //Update the favorite list
+                        $("#favorites").html(data);
+                        //Bootstrap alert
+                        bootstrap_alert("The movie has been delete Successfully");
+                    },
+                    error: function () {
+                        alert("An error has ocurred :(")
+                    }
+                });
+            });
+        });
+        //Order by letter
+        $(document).on('click', '.orderBy', function (event) {
+            var idSelector = event.target.id;
+            var selector = idSelector.slice(1, 2);
+           
+            $.ajax({
+                url: '@Url.Action("FavoriteOrderBy", "Movies")',
+                data: { "selector": selector },
+                type: 'GET',
+                dataType: 'html',
+                cache: false,
+                success: function (data) {
+                    
+                    $("#favorites").html(data);
+                },
+                error: function () {
+                    bootstrap_alert("danger", "Ups an error has ocurred :( !!!!!");
+                }
+            });
+        });
+        //Bootstrap alert
+        bootstrap_alert = function (message) {
+            $(".alertPlaceHolder").html("<div class='alert alert-warning alert-dismissible' role='alert'>" +
+                                        "<button type='button' class='close' data-dismiss='alert'><span aria-hidden='true'>" +
+                                        "&times;</span><span class='sr-only'>Close</span></button><strong>" + message + "</strong></div>");
+        }
+    </script>    
+}
