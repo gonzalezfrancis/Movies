@@ -10,7 +10,8 @@
     background-color:#ffffff;
     min-height:70%;
     margin-bottom:0px;
-    border-radius:15px;
+    border-bottom-left-radius:15px;
+    border-bottom-right-radius:15px;
 }
 /* Override the default bootstrap behavior where horizontal description lists 
    will truncate terms that are too long to fit in the left column 
@@ -84,6 +85,10 @@ body{
     overflow-x:hidden;
 }
 /*Index Movies Controller*/
+.fancybox-type-iframe .fancybox-inner{
+    overflow:hidden !important;
+    
+}
 .insideMovie{
     height:240px;
     width:80%;

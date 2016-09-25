@@ -10,24 +10,30 @@
 <div class="marginTop-20 marginBott-20">
     <a class="orderBy" id="s4" style="cursor:pointer;text-decoration:none;"><span class="glyphicon glyphicon-time"></span> Coming soon</a>
 </div>
+<a id="box"></a>
 <div id="favorites">
     @Html.Partial("_FavoritePartial", Model)
 </div>
 @section scripts {
     <script>
         $(document).ready(function () {
-            //Trailer window
-            $(".videoPopUp").fancybox({
-                maxWidth: 800,
-                maxHeight: 600,
-                fitToView: false,
-                width: '70%',
-                height: '70%',
-                autoSize: false,
-                closeClick: false,
-                openEffect: 'none',
-                closeEffect: 'none'
+            //Open the Video in the Fancybox in a dynamically create element
+            $("#favorites").on('focusin', function () {
+                
+                $("a.videoPopUp").fancybox({
+                    href: videoUrl,
+                    maxWidth: 800,
+                    maxHeight: 600,
+                    fitToView: false,
+                    width: '70%',
+                    height: '70%',
+                    autoSize: false,
+                    closeClick: false,
+                    openEffect: 'none',
+                    closeEffect: 'none'
+                });
             });
+            
             //Notice: Put selector inside the on to avoid stop firing after refresh partial view
             $(document).on('click', ".moviesItem", function (event) {
                 
